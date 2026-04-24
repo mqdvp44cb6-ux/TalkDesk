@@ -1,0 +1,2714 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Talkdesk · Forward Deployed Client Blueprint</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fraunces:ital,opsz,wght@0,14..144,300;0,14..144,400;0,14..144,600;1,14..144,400&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  /* ── TALKDESK BRAND ── */
+  --td-purple: #5405BD;
+  --td-purple-light: #7A2CE8;
+  --td-purple-bright: #9452FF;
+  --td-purple-dim: rgba(84, 5, 189, 0.10);
+  --td-purple-glow: rgba(84, 5, 189, 0.25);
+  --td-deep: #1E0044;
+  --td-deep-soft: #2A0863;
+  --td-lavender: #E8DEFE;
+  --td-lavender-bright: #F3EDFF;
+
+  /* ── SURFACES ── */
+  --bg: #FAF8FD;
+  --surface: #FFFFFF;
+  --panel: #FFFFFF;
+  --panel-soft: #FAF8FD;
+  --panel-active: #F3EDFF;
+  --border: rgba(30, 0, 68, 0.08);
+  --border-bright: rgba(30, 0, 68, 0.15);
+  --border-purple: rgba(84, 5, 189, 0.25);
+
+  /* ── TEXT ── */
+  --text: #1E0044;
+  --text-body: #2A0863;
+  --text-muted: #6B5990;
+  --text-dim: #9D8CBF;
+
+  /* ── SUPPORTING ── */
+  --mint: #00D4A8;
+  --mint-dim: rgba(0, 212, 168, 0.1);
+  --coral: #FF6B6B;
+  --coral-dim: rgba(255, 107, 107, 0.1);
+  --amber: #F5A623;
+  --amber-dim: rgba(245, 166, 35, 0.1);
+  --blue: #4A90E2;
+  --blue-dim: rgba(74, 144, 226, 0.1);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg);
+  color: var(--text-body);
+  font-size: 14px;
+  line-height: 1.6;
+  overflow-x: hidden;
+  font-feature-settings: "ss01", "cv01", "cv11";
+}
+
+/* Soft purple gradient background */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at top right, rgba(148, 82, 255, 0.08), transparent 50%),
+    radial-gradient(ellipse at bottom left, rgba(232, 222, 254, 0.4), transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Subtle dot pattern */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: radial-gradient(circle, rgba(84, 5, 189, 0.04) 1px, transparent 1px);
+  background-size: 28px 28px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── LAYOUT ── */
+.shell {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  min-height: 100vh;
+}
+
+/* ══ SIDEBAR ══ */
+.sidebar {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  background: var(--td-deep);
+  background-image:
+    radial-gradient(ellipse at top, rgba(148, 82, 255, 0.15), transparent 60%),
+    radial-gradient(ellipse at bottom right, rgba(84, 5, 189, 0.2), transparent 70%);
+  color: white;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-right: 1px solid rgba(255,255,255,0.05);
+}
+
+.sidebar-logo {
+  padding: 1.8rem 1.6rem 1.4rem;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+/* Talkdesk Logo Mark — three horizontal dots */
+.td-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  margin-bottom: 0.5rem;
+}
+.td-mark {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+}
+.td-wordmark {
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 1.1rem;
+  letter-spacing: -0.02em;
+  color: white;
+}
+.td-eyebrow {
+  font-size: 9px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--td-purple-bright);
+  font-weight: 700;
+  margin-bottom: 0.3rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.td-eyebrow::before {
+  content: '';
+  width: 14px;
+  height: 1px;
+  background: var(--td-purple-bright);
+}
+
+.sidebar-title {
+  font-family: 'Fraunces', serif;
+  font-size: 1.45rem;
+  font-weight: 400;
+  color: white;
+  line-height: 1.2;
+  margin-top: 0.8rem;
+  letter-spacing: -0.01em;
+}
+.sidebar-title em {
+  font-style: italic;
+  font-weight: 400;
+  color: var(--td-purple-bright);
+}
+.sidebar-sub {
+  font-size: 10.5px;
+  color: rgba(255,255,255,0.4);
+  margin-top: 0.4rem;
+  letter-spacing: 0.02em;
+}
+
+.sidebar-nav {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1rem 0 2rem;
+}
+.sidebar-nav::-webkit-scrollbar { width: 3px; }
+.sidebar-nav::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 2px; }
+
+.nav-section-label {
+  font-size: 8px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.3);
+  padding: 1rem 1.6rem 0.5rem;
+  font-weight: 700;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.55rem 1.6rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  border-left: 2px solid transparent;
+  color: rgba(255,255,255,0.55);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  text-decoration: none;
+}
+.nav-item:hover { color: white; background: rgba(255,255,255,0.03); }
+.nav-item.active {
+  color: white;
+  border-left-color: var(--td-purple-bright);
+  background: linear-gradient(90deg, rgba(148, 82, 255, 0.15), transparent);
+}
+.nav-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  border: 1.5px solid currentColor;
+  flex-shrink: 0;
+  transition: all 0.2s;
+}
+.nav-item.active .nav-dot { background: var(--td-purple-bright); border-color: var(--td-purple-bright); box-shadow: 0 0 8px var(--td-purple-bright); }
+.nav-badge {
+  margin-left: auto;
+  font-size: 9px;
+  background: rgba(255,255,255,0.08);
+  padding: 1px 7px;
+  border-radius: 10px;
+  color: rgba(255,255,255,0.5);
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 500;
+}
+.nav-item.active .nav-badge { background: var(--td-purple-bright); color: var(--td-deep); font-weight: 700; }
+
+.sidebar-footer {
+  padding: 1.1rem 1.6rem;
+  border-top: 1px solid rgba(255,255,255,0.06);
+  background: rgba(0,0,0,0.15);
+}
+.progress-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10px;
+  color: rgba(255,255,255,0.5);
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.progress-track {
+  height: 3px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--td-purple-bright), var(--mint));
+  border-radius: 2px;
+  transition: width 0.5s ease;
+  width: 0%;
+  box-shadow: 0 0 10px var(--td-purple-bright);
+}
+
+.save-row {
+  display: flex;
+  gap: 0.4rem;
+  margin-top: 0.8rem;
+}
+.save-btn {
+  flex: 1;
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.15);
+  color: rgba(255,255,255,0.65);
+  padding: 0.45rem;
+  border-radius: 5px;
+  font-family: 'Inter', sans-serif;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-weight: 600;
+}
+.save-btn:hover { border-color: var(--td-purple-bright); color: var(--td-purple-bright); background: rgba(148, 82, 255, 0.1); }
+
+/* ══ MAIN ══ */
+.main {
+  padding: 3rem 3.5rem 6rem;
+  max-width: 1000px;
+}
+
+/* ══ PAGE HEADER ══ */
+.page-header {
+  margin-bottom: 3.5rem;
+  padding-bottom: 2.5rem;
+  border-bottom: 1px solid var(--border);
+  position: relative;
+}
+.page-header::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 100px;
+  height: 3px;
+  background: linear-gradient(90deg, var(--td-purple), var(--td-purple-bright));
+  border-radius: 2px;
+}
+
+.header-tag {
+  font-size: 10px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--td-purple);
+  font-weight: 700;
+  margin-bottom: 1.2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+.header-tag::before {
+  content: '';
+  width: 20px;
+  height: 2px;
+  background: var(--td-purple);
+  border-radius: 2px;
+}
+
+.page-title {
+  font-family: 'Fraunces', serif;
+  font-size: 4.2rem;
+  font-weight: 400;
+  line-height: 1.0;
+  color: var(--td-deep);
+  margin-bottom: 1.2rem;
+  letter-spacing: -0.02em;
+}
+.page-title strong { font-weight: 600; }
+.page-title em {
+  font-style: italic;
+  font-weight: 400;
+  color: var(--td-purple);
+  position: relative;
+}
+.page-title em::after {
+  content: '';
+  position: absolute;
+  bottom: 0.25rem;
+  left: 0;
+  right: 0;
+  height: 8px;
+  background: var(--td-purple-dim);
+  z-index: -1;
+  border-radius: 4px;
+}
+.page-subtitle {
+  font-size: 15px;
+  color: var(--text-muted);
+  max-width: 650px;
+  line-height: 1.6;
+  font-weight: 400;
+}
+
+/* Talkdesk tagline */
+.td-tagline {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 2rem;
+  padding: 0.4rem 0.9rem;
+  background: var(--td-deep);
+  color: white;
+  border-radius: 100px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+.td-tagline-dots {
+  display: flex;
+  gap: 3px;
+}
+.td-tagline-dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--td-purple-bright);
+  animation: dotPulse 1.6s ease-in-out infinite;
+}
+.td-tagline-dot:nth-child(2) { animation-delay: 0.2s; }
+.td-tagline-dot:nth-child(3) { animation-delay: 0.4s; }
+@keyframes dotPulse {
+  0%, 60%, 100% { opacity: 0.4; transform: scale(0.8); }
+  30% { opacity: 1; transform: scale(1.1); }
+}
+
+/* Mantra */
+.mantra-strip {
+  margin-top: 2rem;
+  padding: 1.5rem 1.8rem;
+  background: linear-gradient(135deg, var(--td-purple), var(--td-deep));
+  color: white;
+  border-radius: 12px;
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-size: 18px;
+  line-height: 1.5;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 15px 40px -15px rgba(84, 5, 189, 0.4);
+}
+.mantra-strip::before {
+  content: '"';
+  position: absolute;
+  top: -20px;
+  left: 1rem;
+  font-size: 5rem;
+  color: rgba(148, 82, 255, 0.3);
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+}
+.mantra-strip::after {
+  content: '';
+  position: absolute;
+  top: -50px;
+  right: -50px;
+  width: 200px;
+  height: 200px;
+  background: radial-gradient(circle, rgba(148, 82, 255, 0.4), transparent 70%);
+  border-radius: 50%;
+}
+.mantra-strip em {
+  font-style: normal;
+  font-weight: 600;
+  color: var(--td-purple-bright);
+}
+.mantra-attr {
+  font-family: 'Inter', sans-serif;
+  font-style: normal;
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.5);
+  display: block;
+  margin-top: 0.8rem;
+  font-weight: 600;
+  position: relative;
+  z-index: 1;
+}
+
+/* ── META STRIP ── */
+.meta-strip {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 2rem;
+  box-shadow: 0 2px 20px rgba(30, 0, 68, 0.04);
+}
+.meta-cell {
+  background: var(--surface);
+  padding: 1.1rem 1.3rem;
+  transition: background 0.15s;
+}
+.meta-cell:hover { background: var(--panel-soft); }
+.meta-cell label {
+  display: block;
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  font-weight: 700;
+  margin-bottom: 0.4rem;
+}
+.meta-cell input {
+  background: transparent;
+  border: none;
+  color: var(--td-deep);
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  width: 100%;
+  outline: none;
+}
+.meta-cell input::placeholder { color: var(--text-dim); font-weight: 400; }
+
+/* ── SECTION ── */
+.section {
+  margin-bottom: 4rem;
+  scroll-margin-top: 2rem;
+  animation: fadeSlideIn 0.5s ease both;
+}
+@keyframes fadeSlideIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.section-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+.section-number {
+  font-family: 'Fraunces', serif;
+  font-size: 3.5rem;
+  font-weight: 400;
+  line-height: 1;
+  flex-shrink: 0;
+  margin-top: -0.4rem;
+  font-style: italic;
+  background: linear-gradient(135deg, var(--td-purple), var(--td-purple-bright));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  opacity: 0.9;
+}
+.section-eyebrow {
+  font-size: 9px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  font-weight: 700;
+  margin-bottom: 0.3rem;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+.section-eyebrow::before {
+  content: '';
+  width: 14px;
+  height: 2px;
+  background: currentColor;
+  border-radius: 2px;
+}
+.section-title {
+  font-family: 'Fraunces', serif;
+  font-size: 2rem;
+  font-weight: 500;
+  color: var(--td-deep);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+.section-desc {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-top: 0.5rem;
+  line-height: 1.6;
+  max-width: 600px;
+}
+
+/* ── FIELDS ── */
+.field-group { margin-bottom: 1.4rem; }
+.field-label {
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--td-deep);
+  font-weight: 700;
+  margin-bottom: 0.55rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.field-hint {
+  font-size: 10px;
+  color: var(--text-muted);
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: 0;
+  margin-left: auto;
+  font-style: italic;
+}
+
+textarea, input[type="text"], input[type="number"] {
+  width: 100%;
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  color: var(--td-deep);
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  padding: 0.8rem 1rem;
+  outline: none;
+  transition: all 0.2s;
+  resize: vertical;
+  line-height: 1.6;
+  font-weight: 400;
+}
+textarea:focus, input[type="text"]:focus, input[type="number"]:focus {
+  border-color: var(--td-purple);
+  box-shadow: 0 0 0 4px var(--td-purple-dim);
+}
+textarea::placeholder, input::placeholder { color: var(--text-dim); }
+textarea { min-height: 90px; }
+
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; }
+
+/* ── PILLS ── */
+.pill-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-bottom: 0.5rem;
+}
+.pill {
+  padding: 0.4rem 0.95rem;
+  border-radius: 100px;
+  border: 1.5px solid var(--border);
+  background: var(--surface);
+  color: var(--text-muted);
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.pill:hover { border-color: var(--td-purple-light); color: var(--td-purple); transform: translateY(-1px); }
+.pill.active {
+  background: var(--td-purple);
+  border-color: var(--td-purple);
+  color: white;
+  box-shadow: 0 4px 12px -2px var(--td-purple-glow);
+}
+
+/* ── FRICTION CARDS ── */
+.friction-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 0.7rem;
+  margin-bottom: 1.5rem;
+}
+.friction-card {
+  border: 1.5px solid var(--border);
+  border-radius: 12px;
+  padding: 1.1rem 1.2rem;
+  background: var(--surface);
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+.friction-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 3px; height: 100%;
+  background: var(--border-bright);
+  transition: background 0.2s;
+}
+.friction-card:hover {
+  border-color: var(--td-purple-light);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px -8px var(--td-purple-glow);
+}
+.friction-card.selected {
+  border-color: var(--coral);
+  background: linear-gradient(135deg, var(--coral-dim), var(--surface));
+}
+.friction-card.selected::before { background: var(--coral); }
+
+.friction-card-icon { font-size: 1.4rem; margin-bottom: 0.5rem; }
+.friction-card-name {
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--td-deep);
+  margin-bottom: 0.25rem;
+  letter-spacing: -0.01em;
+}
+.friction-card-desc { font-size: 11.5px; color: var(--text-muted); line-height: 1.5; }
+
+/* ── RATING ── */
+.rating-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.6rem;
+  padding: 0.8rem 1.1rem;
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  transition: border-color 0.15s;
+}
+.rating-row:hover { border-color: var(--td-purple-light); }
+.rating-label {
+  flex: 1;
+  font-size: 13px;
+  color: var(--td-deep);
+  font-weight: 500;
+}
+.rating-label small { display: block; font-size: 11px; color: var(--text-muted); margin-top: 0.2rem; font-weight: 400; }
+.rating-btns { display: flex; gap: 0.3rem; }
+.rating-btn {
+  width: 32px; height: 32px;
+  border-radius: 6px;
+  border: 1.5px solid var(--border);
+  background: var(--surface);
+  color: var(--text-muted);
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.rating-btn:hover { border-color: var(--td-purple-light); color: var(--td-purple); }
+.rating-btn.active-1, .rating-btn.active-2 { background: var(--coral); border-color: var(--coral); color: white; }
+.rating-btn.active-3 { background: var(--amber); border-color: var(--amber); color: white; }
+.rating-btn.active-4, .rating-btn.active-5 { background: var(--td-purple); border-color: var(--td-purple); color: white; }
+
+/* ── WORKFLOW ── */
+.workflow-intro {
+  padding: 1rem 1.2rem;
+  background: var(--panel-soft);
+  border: 1px dashed var(--border-purple);
+  border-radius: 10px;
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-bottom: 1rem;
+  line-height: 1.6;
+}
+.workflow-intro strong { color: var(--td-purple); font-weight: 700; }
+.workflow-intro code {
+  background: var(--td-deep);
+  color: var(--td-purple-bright);
+  padding: 1px 7px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+.workflow-list { display: flex; flex-direction: column; gap: 0.6rem; }
+.workflow-row {
+  display: grid;
+  grid-template-columns: 36px 1fr 1fr 1fr 90px 30px;
+  gap: 0.5rem;
+  align-items: center;
+  padding: 0.5rem;
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  transition: border-color 0.15s;
+}
+.workflow-row:hover { border-color: var(--td-purple-light); }
+.workflow-num {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-size: 1.4rem;
+  color: var(--td-purple);
+  text-align: center;
+  font-weight: 500;
+}
+.workflow-row input {
+  background: transparent;
+  border: none;
+  padding: 0.4rem 0.6rem;
+  font-size: 12px;
+  border-bottom: 1px solid transparent;
+  border-radius: 0;
+}
+.workflow-row input:focus { box-shadow: none; border-bottom-color: var(--td-purple); }
+.workflow-row select {
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  color: var(--td-deep);
+  font-family: 'Inter', sans-serif;
+  font-size: 10px;
+  padding: 0.4rem 0.5rem;
+  border-radius: 6px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  outline: none;
+  cursor: pointer;
+}
+.row-del {
+  background: transparent;
+  border: 1.5px solid var(--border);
+  color: var(--text-dim);
+  width: 26px; height: 26px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 10px;
+  transition: all 0.15s;
+}
+.row-del:hover { border-color: var(--coral); color: var(--coral); }
+
+/* ── USE CASES ── */
+.use-case-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 0.6rem;
+}
+.use-case-card {
+  border: 1.5px solid var(--border);
+  border-radius: 12px;
+  padding: 1.1rem;
+  background: var(--surface);
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+}
+.use-case-card:hover {
+  border-color: var(--td-purple-light);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px -8px var(--td-purple-glow);
+}
+.use-case-card.selected-voice { border-color: var(--td-purple); background: linear-gradient(135deg, var(--td-purple-dim), var(--surface)); }
+.use-case-card.selected-digital { border-color: var(--blue); background: linear-gradient(135deg, var(--blue-dim), var(--surface)); }
+.use-case-card.selected-ai { border-color: var(--td-purple-light); background: linear-gradient(135deg, rgba(148, 82, 255, 0.15), var(--surface)); }
+.use-case-card.selected-fsi { border-color: var(--mint); background: linear-gradient(135deg, var(--mint-dim), var(--surface)); }
+.uc-icon { font-size: 1.3rem; margin-bottom: 0.5rem; }
+.uc-name {
+  font-family: 'Inter', sans-serif;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--td-deep);
+  margin-bottom: 0.4rem;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+}
+.uc-tag {
+  display: inline-block;
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 2px 7px;
+  border-radius: 4px;
+  font-weight: 700;
+}
+.tag-voice { color: var(--td-purple); background: var(--td-purple-dim); }
+.tag-digital { color: var(--blue); background: var(--blue-dim); }
+.tag-ai { color: var(--td-purple-light); background: rgba(148, 82, 255, 0.15); }
+.tag-fsi { color: var(--mint); background: var(--mint-dim); }
+
+/* ── KPI TABLE ── */
+.kpi-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 0.45rem;
+}
+.kpi-table th {
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  font-weight: 700;
+  padding: 0 0.7rem 0.5rem;
+  text-align: left;
+}
+.kpi-row td {
+  background: var(--surface);
+  padding: 0.65rem 0.7rem;
+  border-top: 1.5px solid var(--border);
+  border-bottom: 1.5px solid var(--border);
+}
+.kpi-row td:first-child { border-left: 1.5px solid var(--border); border-radius: 8px 0 0 8px; }
+.kpi-row td:last-child { border-right: 1.5px solid var(--border); border-radius: 0 8px 8px 0; }
+.kpi-row input {
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  padding: 0;
+  font-size: 12.5px;
+  box-shadow: none;
+}
+.kpi-row input:focus { box-shadow: none; border-color: transparent; }
+.kpi-row.fdapm-native td { background: var(--td-lavender-bright); }
+.kpi-row.fdapm-native td:first-child { border-left-color: var(--td-purple); }
+.kpi-native-label {
+  display: inline-block;
+  font-size: 8px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: var(--td-purple);
+  color: white;
+  margin-right: 0.5rem;
+  font-weight: 800;
+  vertical-align: middle;
+}
+.kpi-importance {
+  display: flex;
+  gap: 4px;
+}
+.imp-dot {
+  width: 9px; height: 9px;
+  border-radius: 50%;
+  border: 1.5px solid var(--border-bright);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.imp-dot.lit { background: var(--amber); border-color: var(--amber); }
+
+/* ── ROI ── */
+.roi-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 1rem;
+}
+.roi-cell {
+  background: var(--surface);
+  padding: 1.1rem 1.3rem;
+}
+.roi-cell label {
+  display: block;
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 0.5rem;
+  font-weight: 700;
+}
+.roi-output {
+  font-family: 'Fraunces', serif;
+  font-size: 2.4rem;
+  font-weight: 600;
+  color: var(--td-purple);
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+.roi-output-label { font-size: 11px; color: var(--text-muted); margin-top: 0.35rem; font-weight: 500; }
+.roi-cell input {
+  border: none;
+  border-bottom: 1.5px solid var(--border);
+  border-radius: 0;
+  background: transparent;
+  padding: 0.3rem 0;
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--td-deep);
+}
+.roi-cell input:focus { box-shadow: none; border-color: var(--td-purple); }
+
+.lever-label {
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--td-deep);
+  margin-bottom: 0.9rem;
+  font-weight: 700;
+  padding-left: 1rem;
+  border-left: 3px solid var(--td-purple);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.lever-label small {
+  font-size: 10px;
+  color: var(--text-muted);
+  font-weight: 500;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+/* ── DELIGHT ── */
+.delight-list { display: flex; flex-direction: column; gap: 0.7rem; }
+.delight-item {
+  border: 1.5px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+  overflow: hidden;
+  transition: all 0.2s;
+}
+.delight-item:hover { border-color: var(--td-purple-light); box-shadow: 0 4px 16px -6px var(--td-purple-glow); }
+.delight-item.open { border-color: var(--td-purple); box-shadow: 0 8px 24px -8px var(--td-purple-glow); }
+.delight-item-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.1rem 1.3rem;
+  cursor: pointer;
+}
+.delight-item-header:hover { background: var(--panel-soft); }
+.delight-icon {
+  width: 40px; height: 40px;
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.2rem;
+  flex-shrink: 0;
+  background: var(--td-lavender-bright);
+}
+.delight-title {
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--td-deep);
+  letter-spacing: -0.01em;
+}
+.delight-subtitle { font-size: 12px; color: var(--text-muted); margin-top: 0.15rem; }
+.delight-expand {
+  margin-left: auto;
+  color: var(--td-purple);
+  font-size: 14px;
+  font-weight: 700;
+  transition: transform 0.2s;
+}
+.delight-item.open .delight-expand { transform: rotate(180deg); }
+.delight-body {
+  display: none;
+  padding: 0 1.3rem 1.3rem;
+  border-top: 1px solid var(--border);
+}
+.delight-item.open .delight-body { display: block; }
+.delight-body p {
+  font-size: 13px;
+  color: var(--text-body);
+  margin-bottom: 0.9rem;
+  line-height: 1.7;
+  padding-top: 1rem;
+}
+
+/* ── CALLOUTS ── */
+.insight-box {
+  border: 1.5px solid var(--td-purple);
+  border-left: 4px solid var(--td-purple);
+  background: linear-gradient(135deg, var(--td-lavender-bright), var(--surface));
+  border-radius: 0 10px 10px 0;
+  padding: 1.1rem 1.4rem;
+  margin: 1.5rem 0;
+  font-size: 13px;
+  color: var(--text-body);
+  line-height: 1.7;
+}
+.insight-box strong {
+  color: var(--td-purple);
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 0.4rem;
+  font-weight: 800;
+}
+.amber-box { border-color: var(--amber); background: linear-gradient(135deg, var(--amber-dim), var(--surface)); }
+.amber-box strong { color: var(--amber); }
+.coral-box { border-color: var(--coral); background: linear-gradient(135deg, var(--coral-dim), var(--surface)); }
+.coral-box strong { color: var(--coral); }
+.mint-box { border-color: var(--mint); background: linear-gradient(135deg, var(--mint-dim), var(--surface)); }
+.mint-box strong { color: var(--mint); }
+
+/* ── PILOT CARD ── */
+.pilot-card {
+  background: linear-gradient(135deg, var(--td-deep), var(--td-purple));
+  color: white;
+  border-radius: 16px;
+  padding: 2rem;
+  margin: 1.2rem 0;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 20px 50px -20px rgba(84, 5, 189, 0.4);
+}
+.pilot-card::before {
+  content: '';
+  position: absolute;
+  top: -80px;
+  right: -80px;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, rgba(148, 82, 255, 0.4), transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+.pilot-card-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  position: relative;
+  z-index: 1;
+}
+.pilot-icon {
+  width: 48px; height: 48px;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.15);
+  border: 1.5px solid rgba(255,255,255,0.25);
+  color: white;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.3rem;
+  backdrop-filter: blur(10px);
+}
+.pilot-title {
+  font-family: 'Fraunces', serif;
+  font-size: 1.5rem;
+  font-weight: 500;
+  line-height: 1.2;
+  color: white;
+}
+.pilot-sub {
+  font-size: 10.5px;
+  color: var(--td-purple-bright);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-weight: 700;
+  margin-top: 0.3rem;
+}
+
+.pilot-card .field-label { color: rgba(255,255,255,0.85); }
+.pilot-card input,
+.pilot-card textarea {
+  background: rgba(255,255,255,0.08);
+  border: 1.5px solid rgba(255,255,255,0.15);
+  color: white;
+  backdrop-filter: blur(10px);
+}
+.pilot-card input:focus,
+.pilot-card textarea:focus {
+  background: rgba(255,255,255,0.12);
+  border-color: var(--td-purple-bright);
+  box-shadow: 0 0 0 4px rgba(148, 82, 255, 0.25);
+}
+.pilot-card input::placeholder,
+.pilot-card textarea::placeholder { color: rgba(255,255,255,0.4); }
+.pilot-card .pill {
+  background: rgba(255,255,255,0.08);
+  border-color: rgba(255,255,255,0.2);
+  color: rgba(255,255,255,0.8);
+}
+.pilot-card .pill:hover { border-color: var(--td-purple-bright); color: white; }
+.pilot-card .pill.active { background: var(--td-purple-bright); border-color: var(--td-purple-bright); color: var(--td-deep); }
+
+/* ── READINESS ── */
+.readiness-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  margin: 1.5rem 0;
+  box-shadow: 0 4px 20px rgba(30, 0, 68, 0.05);
+}
+.readiness-cell {
+  background: var(--surface);
+  padding: 1.2rem;
+  text-align: center;
+}
+.readiness-value {
+  font-family: 'Fraunces', serif;
+  font-size: 2.3rem;
+  font-weight: 600;
+  line-height: 1;
+  margin-bottom: 0.4rem;
+  letter-spacing: -0.02em;
+}
+.readiness-label {
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  font-weight: 700;
+}
+
+/* ── ACTIONS ── */
+.action-bar {
+  display: flex;
+  gap: 0.8rem;
+  margin-top: 1.5rem;
+  flex-wrap: wrap;
+}
+.btn {
+  padding: 0.8rem 1.6rem;
+  border-radius: 8px;
+  border: 1.5px solid;
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-primary {
+  background: var(--td-purple);
+  border-color: var(--td-purple);
+  color: white;
+  box-shadow: 0 6px 20px -4px var(--td-purple-glow);
+}
+.btn-primary:hover {
+  background: var(--td-purple-light);
+  border-color: var(--td-purple-light);
+  transform: translateY(-1px);
+  box-shadow: 0 10px 24px -4px var(--td-purple-glow);
+}
+.btn-sf {
+  background: #0176d3;
+  border-color: #0176d3;
+  color: white;
+}
+.btn-sf:hover { background: #014486; border-color: #014486; transform: translateY(-1px); }
+.btn-ghost {
+  background: var(--surface);
+  border-color: var(--border-bright);
+  color: var(--text-muted);
+}
+.btn-ghost:hover { border-color: var(--td-purple); color: var(--td-purple); }
+
+/* ── SALESFORCE MODAL ── */
+.sf-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(30, 0, 68, 0.7);
+  backdrop-filter: blur(8px);
+  z-index: 10000;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+.sf-overlay.open { display: flex; }
+.sf-modal {
+  background: var(--surface);
+  border-radius: 16px;
+  width: 100%;
+  max-width: 620px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 40px 80px rgba(30, 0, 68, 0.3);
+  animation: fadeSlideIn 0.25s ease both;
+}
+.sf-modal-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 1.8rem 2rem 1.3rem;
+  border-bottom: 1px solid var(--border);
+  background: linear-gradient(135deg, var(--td-lavender-bright), var(--surface));
+  border-radius: 16px 16px 0 0;
+}
+.sf-modal-eyebrow {
+  font-size: 10px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: #0176d3;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+.sf-modal-title {
+  font-family: 'Fraunces', serif;
+  font-size: 1.6rem;
+  font-weight: 500;
+  color: var(--td-deep);
+}
+.sf-close {
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: 6px;
+  color: var(--text-muted);
+  width: 30px; height: 30px;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.15s;
+  flex-shrink: 0;
+}
+.sf-close:hover { border-color: var(--text-body); color: var(--td-deep); }
+
+.sf-step { padding: 1.5rem 2rem; }
+.sf-step-label {
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  font-weight: 700;
+  margin-bottom: 1.2rem;
+}
+
+.sf-field-group { margin-bottom: 1rem; }
+.sf-field-group label {
+  display: block;
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--td-deep);
+  font-weight: 700;
+  margin-bottom: 0.4rem;
+}
+
+.sf-object-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.7rem;
+  margin-bottom: 1.2rem;
+}
+.sf-object-card {
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  padding: 1.1rem;
+  background: var(--surface);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.sf-object-card:hover { border-color: #0176d3; transform: translateY(-1px); }
+.sf-object-card.selected { border-color: #0176d3; background: rgba(1,118,211,0.06); }
+.sf-object-icon { font-size: 1.4rem; margin-bottom: 0.4rem; }
+.sf-object-name {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--td-deep);
+  margin-bottom: 0.3rem;
+}
+.sf-object-desc { font-size: 11px; color: var(--text-muted); line-height: 1.5; }
+
+.sf-review {
+  background: var(--panel-soft);
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  padding: 1.2rem;
+  max-height: 320px;
+  overflow-y: auto;
+  font-size: 11.5px;
+  line-height: 1.9;
+}
+.sf-review-section { margin-bottom: 1rem; }
+.sf-review-section-title {
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #0176d3;
+  margin-bottom: 0.5rem;
+  padding-bottom: 0.3rem;
+  border-bottom: 1px solid var(--border);
+  font-weight: 700;
+}
+.sf-kv { display: flex; gap: 0.8rem; margin-bottom: 0.3rem; }
+.sf-kv-key { color: var(--text-muted); width: 180px; flex-shrink: 0; font-size: 11px; font-weight: 600; }
+.sf-kv-val { color: var(--td-deep); word-break: break-word; font-size: 11.5px; }
+
+.sf-status {
+  margin-top: 1rem;
+  padding: 0.8rem 1rem;
+  border-radius: 8px;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+}
+.sf-status.loading { background: var(--blue-dim); border: 1.5px solid var(--blue); color: var(--blue); }
+.sf-status.error { background: var(--coral-dim); border: 1.5px solid var(--coral); color: var(--coral); }
+.sf-status.success { background: var(--mint-dim); border: 1.5px solid var(--mint); color: var(--mint); }
+.sf-spinner {
+  width: 14px; height: 14px;
+  border: 2px solid transparent;
+  border-top-color: currentColor;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.sf-modal-footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.8rem;
+  margin-top: 1.5rem;
+  padding-top: 1.2rem;
+  border-top: 1px solid var(--border);
+}
+
+.sf-success { text-align: center; padding: 2rem 1rem; }
+.sf-success-icon {
+  width: 64px; height: 64px;
+  border-radius: 50%;
+  background: var(--mint-dim);
+  border: 2px solid var(--mint);
+  color: var(--mint);
+  font-size: 2rem;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 1.2rem;
+}
+.sf-success-title {
+  font-family: 'Fraunces', serif;
+  font-size: 1.8rem;
+  color: var(--td-deep);
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+.sf-success-sub { font-size: 12px; color: var(--text-muted); margin-bottom: 1.2rem; }
+.sf-result-links { display: flex; flex-direction: column; gap: 0.5rem; align-items: center; }
+.sf-result-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.55rem 1.3rem;
+  border-radius: 8px;
+  border: 1.5px solid #0176d3;
+  color: #0176d3;
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.15s;
+}
+.sf-result-link:hover { background: rgba(1,118,211,0.08); }
+
+/* ── PRINT ── */
+@media print {
+  .sidebar, .cursor-glow, body::before, body::after { display: none !important; }
+  .shell { grid-template-columns: 1fr; }
+  .main { padding: 1rem; max-width: 100%; }
+  body { background: white; }
+  textarea, input { color: black !important; background: #f9f9f9 !important; }
+  .mantra-strip, .pilot-card { background: #f3edff !important; color: var(--td-deep) !important; box-shadow: none !important; }
+  .pilot-card .field-label { color: var(--td-deep) !important; }
+  .pilot-card input, .pilot-card textarea { background: white !important; color: black !important; border-color: #ccc !important; }
+}
+
+/* ── CURSOR GLOW ── */
+.cursor-glow {
+  position: fixed;
+  width: 400px; height: 400px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(148, 82, 255, 0.06) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  transition: left 0.08s, top 0.08s;
+}
+
+/* ── TOAST ── */
+.toast {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  background: var(--td-deep);
+  color: white;
+  padding: 0.9rem 1.3rem;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  z-index: 10001;
+  transform: translateY(100px);
+  opacity: 0;
+  transition: all 0.3s ease;
+  box-shadow: 0 15px 40px rgba(30, 0, 68, 0.3);
+  border-left: 3px solid var(--td-purple-bright);
+}
+.toast.show { transform: translateY(0); opacity: 1; }
+</style>
+</head>
+<body>
+<div class="cursor-glow" id="cursorGlow"></div>
+
+<div class="shell">
+
+  <!-- ══ SIDEBAR ══ -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="td-logo">
+        <!-- Talkdesk logo mark: 3 horizontal dots -->
+        <svg class="td-mark" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="6" cy="16" r="3.2" fill="#9452FF"/>
+          <circle cx="16" cy="16" r="3.2" fill="#9452FF"/>
+          <circle cx="26" cy="16" r="3.2" fill="#9452FF"/>
+        </svg>
+        <span class="td-wordmark">Talkdesk</span>
+      </div>
+      <div class="td-eyebrow">Forward Deployed</div>
+      <div class="sidebar-title">Client<br><em>Blueprint</em></div>
+      <div class="sidebar-sub">Discovery · Design · Pilot · Production</div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Discovery</div>
+      <a class="nav-item active" href="#s-client"><span class="nav-dot"></span>Client Profile<span class="nav-badge">01</span></a>
+      <a class="nav-item" href="#s-friction"><span class="nav-dot"></span>Friction &amp; Pain<span class="nav-badge">02</span></a>
+      <a class="nav-item" href="#s-current"><span class="nav-dot"></span>Current State<span class="nav-badge">03</span></a>
+      <a class="nav-item" href="#s-workflow"><span class="nav-dot"></span>Workflow Mapping<span class="nav-badge">04</span></a>
+      <a class="nav-item" href="#s-usecases"><span class="nav-dot"></span>Automation Map<span class="nav-badge">05</span></a>
+      <div class="nav-section-label">Outcomes</div>
+      <a class="nav-item" href="#s-kpis"><span class="nav-dot"></span>KPIs &amp; Goals<span class="nav-badge">06</span></a>
+      <a class="nav-item" href="#s-roi"><span class="nav-dot"></span>ROI Modeling<span class="nav-badge">07</span></a>
+      <div class="nav-section-label">Pilot → Production</div>
+      <a class="nav-item" href="#s-pilot"><span class="nav-dot"></span>Pilot Scope<span class="nav-badge">08</span></a>
+      <a class="nav-item" href="#s-delight"><span class="nav-dot"></span>Delight &amp; Insights<span class="nav-badge">09</span></a>
+      <a class="nav-item" href="#s-summary"><span class="nav-dot"></span>Engagement Summary<span class="nav-badge">10</span></a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="progress-label"><span>Completion</span><span id="pct">0%</span></div>
+      <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+      <div class="save-row">
+        <button class="save-btn" onclick="saveLocal()">💾 Save</button>
+        <button class="save-btn" onclick="loadLocal()">↻ Load</button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ══ MAIN ══ -->
+  <main class="main">
+
+    <div class="page-header">
+      <div class="header-tag">Talkdesk · Forward Deployed · v2.0</div>
+      <div class="page-title"><em>Discovery</em><br>to <strong>Production.</strong></div>
+      <div class="page-subtitle">A structured engagement framework built for embedded client work — surface workflow friction, design AI-powered solutions, model measurable outcomes, and move from pilot to scale.</div>
+
+      <div class="td-tagline">
+        <div class="td-tagline-dots">
+          <span class="td-tagline-dot"></span>
+          <span class="td-tagline-dot"></span>
+          <span class="td-tagline-dot"></span>
+        </div>
+        Customer Experience. Automated.
+      </div>
+
+      <div class="mantra-strip">
+        Define the <em>art of the possible</em> for each client. Translate operational pain into AI workflow solutions that ship. Own the outcome, not just the activity.
+        <span class="mantra-attr">— Forward Deployed Operating Principles</span>
+      </div>
+    </div>
+
+    <!-- ══ 01 CLIENT PROFILE ══ -->
+    <section class="section" id="s-client">
+      <div class="section-header">
+        <div class="section-number">01</div>
+        <div>
+          <div class="section-eyebrow" style="color:var(--td-purple)">Foundation</div>
+          <div class="section-title">Client Profile &amp; Context</div>
+          <div class="section-desc">Establish operating context before diving into problems. The more precise the profile, the sharper the engagement plan.</div>
+        </div>
+      </div>
+
+      <div class="meta-strip">
+        <div class="meta-cell"><label>Company Name</label><input type="text" id="f-company" placeholder="Acme Bank"></div>
+        <div class="meta-cell"><label>Primary Contact</label><input type="text" id="f-contact" placeholder="Jane Smith, VP CX"></div>
+        <div class="meta-cell"><label>Session Date</label><input type="text" id="sessionDate"></div>
+        <div class="meta-cell"><label>FDAPM / Lead</label><input type="text" id="f-lead" placeholder="Your name"></div>
+      </div>
+
+      <div class="two-col">
+        <div class="field-group">
+          <div class="field-label">Industry Vertical <span class="field-hint">select one</span></div>
+          <div class="pill-row" id="pills-industry">
+            <span class="pill" onclick="togglePill(this,'pills-industry')">Financial Services</span>
+            <span class="pill" onclick="togglePill(this,'pills-industry')">Credit Union</span>
+            <span class="pill" onclick="togglePill(this,'pills-industry')">Insurance</span>
+            <span class="pill" onclick="togglePill(this,'pills-industry')">Healthcare</span>
+            <span class="pill" onclick="togglePill(this,'pills-industry')">Retail / eCommerce</span>
+            <span class="pill" onclick="togglePill(this,'pills-industry')">Consumer Goods</span>
+            <span class="pill" onclick="togglePill(this,'pills-industry')">Government</span>
+            <span class="pill" onclick="togglePill(this,'pills-industry')">Utilities</span>
+            <span class="pill" onclick="togglePill(this,'pills-industry')">Travel &amp; Hospitality</span>
+          </div>
+        </div>
+        <div class="field-group">
+          <div class="field-label">Organization Size</div>
+          <div class="pill-row" id="pills-size">
+            <span class="pill" onclick="togglePill(this,'pills-size')">1–50 agents</span>
+            <span class="pill" onclick="togglePill(this,'pills-size')">51–200</span>
+            <span class="pill" onclick="togglePill(this,'pills-size')">201–500</span>
+            <span class="pill" onclick="togglePill(this,'pills-size')">500–1500</span>
+            <span class="pill" onclick="togglePill(this,'pills-size')">1500+</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="two-col">
+        <div class="field-group">
+          <div class="field-label">Primary Workflow Domain <span class="field-hint">where the pilot will live</span></div>
+          <div class="pill-row" id="pills-domain">
+            <span class="pill" onclick="togglePill(this,'pills-domain')">Servicing / Support</span>
+            <span class="pill" onclick="togglePill(this,'pills-domain')">Collections</span>
+            <span class="pill" onclick="togglePill(this,'pills-domain')">Fraud &amp; Disputes</span>
+            <span class="pill" onclick="togglePill(this,'pills-domain')">Origination</span>
+            <span class="pill" onclick="togglePill(this,'pills-domain')">Sales / Outbound</span>
+            <span class="pill" onclick="togglePill(this,'pills-domain')">Card Operations</span>
+            <span class="pill" onclick="togglePill(this,'pills-domain')">Member Services</span>
+          </div>
+        </div>
+        <div class="field-group">
+          <div class="field-label">Regulatory Environment <span class="field-hint">compliance posture</span></div>
+          <div class="pill-row" id="pills-regs">
+            <span class="pill" onclick="togglePillMulti(this)">FFIEC</span>
+            <span class="pill" onclick="togglePillMulti(this)">CFPB</span>
+            <span class="pill" onclick="togglePillMulti(this)">OCC</span>
+            <span class="pill" onclick="togglePillMulti(this)">NCUA</span>
+            <span class="pill" onclick="togglePillMulti(this)">PCI DSS</span>
+            <span class="pill" onclick="togglePillMulti(this)">SOC 2</span>
+            <span class="pill" onclick="togglePillMulti(this)">GLBA</span>
+            <span class="pill" onclick="togglePillMulti(this)">HIPAA</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="three-col">
+        <div class="field-group"><div class="field-label">Monthly Contact Volume</div><input type="text" id="f-volume" placeholder="e.g. 45,000"></div>
+        <div class="field-group"><div class="field-label">Current CCaaS Platform</div><input type="text" id="f-ccaas" placeholder="Avaya, Genesys, Five9"></div>
+        <div class="field-group"><div class="field-label">Core Platform</div><input type="text" id="f-core" placeholder="Fiserv, FIS, Jack Henry"></div>
+      </div>
+
+      <div class="field-group">
+        <div class="field-label">Business Context <span class="field-hint">what's driving this engagement now?</span></div>
+        <textarea id="f-context" placeholder="Legacy platform end-of-life, merger, cost pressure, new CX leadership directive, competitive pressure, board mandate…"></textarea>
+      </div>
+
+      <div class="field-group">
+        <div class="field-label">Key Stakeholders &amp; Sponsors <span class="field-hint">budget, operations, IT, CX</span></div>
+        <textarea id="f-stakeholders" placeholder="Names, titles, roles. Flag C-suite sponsor explicitly. Note who owns budget, operations, IT, and the customer experience outcome." style="min-height:70px;"></textarea>
+      </div>
+
+      <div class="field-group">
+        <div class="field-label">Existing AI / Automation Footprint <span class="field-hint">what have they tried?</span></div>
+        <textarea id="f-ai-existing" placeholder="What's already in place? What worked? What failed or underperformed, and why? This is critical context — it shapes what we design and how we sequence." style="min-height:70px;"></textarea>
+      </div>
+    </section>
+
+    <!-- ══ 02 FRICTION ══ -->
+    <section class="section" id="s-friction">
+      <div class="section-header">
+        <div class="section-number">02</div>
+        <div>
+          <div class="section-eyebrow" style="color:var(--coral)">Pain Mapping</div>
+          <div class="section-title">Friction &amp; Pain Points</div>
+          <div class="section-desc">Select every friction that resonates. These become the evidence base for the pilot case and the value narrative.</div>
+        </div>
+      </div>
+
+      <div class="friction-grid">
+        <div class="friction-card" onclick="cardToggle(this)"><div class="friction-card-icon">⏱️</div><div class="friction-card-name">Long Handle Times</div><div class="friction-card-desc">Agents spend too long on calls due to system navigation, hold, or lack of context.</div></div>
+        <div class="friction-card" onclick="cardToggle(this)"><div class="friction-card-icon">🔁</div><div class="friction-card-name">High Repeat Contact Rate</div><div class="friction-card-desc">Customers call back because issues aren't resolved on first contact.</div></div>
+        <div class="friction-card" onclick="cardToggle(this)"><div class="friction-card-icon">📞</div><div class="friction-card-name">IVR Abandonment</div><div class="friction-card-desc">Customers opt out or hang up in the IVR and never reach resolution.</div></div>
+        <div class="friction-card" onclick="cardToggle(this)"><div class="friction-card-icon">🤝</div><div class="friction-card-name">Agent Turnover &amp; Burnout</div><div class="friction-card-desc">High attrition driven by repetitive calls, poor tools, and lack of support.</div></div>
+        <div class="friction-card" onclick="cardToggle(this)"><div class="friction-card-icon">🧩</div><div class="friction-card-name">Fragmented Systems</div><div class="friction-card-desc">Agents toggle between multiple platforms to serve a single customer.</div></div>
+        <div class="friction-card" onclick="cardToggle(this)"><div class="friction-card-icon">📉</div><div class="friction-card-name">Poor CSAT / NPS Scores</div><div class="friction-card-desc">Customer satisfaction metrics declining or not meeting targets.</div></div>
+        <div class="friction-card" onclick="cardToggle(this)"><div class="friction-card-icon">🌐</div><div class="friction-card-name">Limited Digital Channels</div><div class="friction-card-desc">Customers expect chat, SMS, or messaging but only phone is available.</div></div>
+        <div class="friction-card" onclick="cardToggle(this)"><div class="friction-card-icon">🤖</div><div class="friction-card-name">Ineffective Self-Service</div><div class="friction-card-desc">IVR or bots can't resolve simple inquiries, pushing volume to live agents.</div></div>
+        <div class="friction-card" onclick="cardToggle(this)"><div class="friction-card-icon">🔧</div><div class="friction-card-name">Manual Workflow Steps</div><div class="friction-card-desc">Repetitive manual tasks with no automation — prime pilot territory.</div></div>
+        <div class="friction-card" onclick="cardToggle(this)"><div class="friction-card-icon">🔑</div><div class="friction-card-name">Authentication Friction</div><div class="friction-card-desc">Knowledge-based auth is slow, insecure, and frustrates customers.</div></div>
+        <div class="friction-card" onclick="cardToggle(this)"><div class="friction-card-icon">📊</div><div class="friction-card-name">Lack of Operational Visibility</div><div class="friction-card-desc">Leaders lack real-time data on queues, SLAs, and performance.</div></div>
+        <div class="friction-card" onclick="cardToggle(this)"><div class="friction-card-icon">🏋️</div><div class="friction-card-name">Staffing / Forecasting Gaps</div><div class="friction-card-desc">Under or overstaffed regularly; schedules don't match demand.</div></div>
+        <div class="friction-card" onclick="cardToggle(this)"><div class="friction-card-icon">⚖️</div><div class="friction-card-name">Compliance Exposure</div><div class="friction-card-desc">UDAAP risk, recording consent, dispute handling, or Reg E exposure.</div></div>
+        <div class="friction-card" onclick="cardToggle(this)"><div class="friction-card-icon">💸</div><div class="friction-card-name">Escalating Operating Costs</div><div class="friction-card-desc">Cost-per-contact rising without proportional lift in quality.</div></div>
+        <div class="friction-card" onclick="cardToggle(this)"><div class="friction-card-icon">🎯</div><div class="friction-card-name">Collections Sensitivity</div><div class="friction-card-desc">High compliance risk, emotional interactions, self-service avoidance.</div></div>
+        <div class="friction-card" onclick="cardToggle(this)"><div class="friction-card-icon">🕸️</div><div class="friction-card-name">Legacy Workflow Sprawl</div><div class="friction-card-desc">Undocumented processes live only in agents' heads or spreadsheets.</div></div>
+      </div>
+
+      <div class="field-group">
+        <div class="field-label">Severity Rating <span class="field-hint">1 minor · 5 business-critical</span></div>
+        <div class="rating-row"><div class="rating-label">Handle Time / Efficiency<small>Current avg AHT if known</small></div><div class="rating-btns"><button class="rating-btn" onclick="setRating(this)">1</button><button class="rating-btn" onclick="setRating(this)">2</button><button class="rating-btn" onclick="setRating(this)">3</button><button class="rating-btn" onclick="setRating(this)">4</button><button class="rating-btn" onclick="setRating(this)">5</button></div></div>
+        <div class="rating-row"><div class="rating-label">Customer Satisfaction<small>CSAT / NPS / CES</small></div><div class="rating-btns"><button class="rating-btn" onclick="setRating(this)">1</button><button class="rating-btn" onclick="setRating(this)">2</button><button class="rating-btn" onclick="setRating(this)">3</button><button class="rating-btn" onclick="setRating(this)">4</button><button class="rating-btn" onclick="setRating(this)">5</button></div></div>
+        <div class="rating-row"><div class="rating-label">Agent Experience &amp; Retention<small>Annual turnover %</small></div><div class="rating-btns"><button class="rating-btn" onclick="setRating(this)">1</button><button class="rating-btn" onclick="setRating(this)">2</button><button class="rating-btn" onclick="setRating(this)">3</button><button class="rating-btn" onclick="setRating(this)">4</button><button class="rating-btn" onclick="setRating(this)">5</button></div></div>
+        <div class="rating-row"><div class="rating-label">Digital / Self-Service Capability<small>Containment rate today</small></div><div class="rating-btns"><button class="rating-btn" onclick="setRating(this)">1</button><button class="rating-btn" onclick="setRating(this)">2</button><button class="rating-btn" onclick="setRating(this)">3</button><button class="rating-btn" onclick="setRating(this)">4</button><button class="rating-btn" onclick="setRating(this)">5</button></div></div>
+        <div class="rating-row"><div class="rating-label">Technology &amp; Integration<small>System fragmentation</small></div><div class="rating-btns"><button class="rating-btn" onclick="setRating(this)">1</button><button class="rating-btn" onclick="setRating(this)">2</button><button class="rating-btn" onclick="setRating(this)">3</button><button class="rating-btn" onclick="setRating(this)">4</button><button class="rating-btn" onclick="setRating(this)">5</button></div></div>
+        <div class="rating-row"><div class="rating-label">Compliance &amp; Risk<small>Audit exposure</small></div><div class="rating-btns"><button class="rating-btn" onclick="setRating(this)">1</button><button class="rating-btn" onclick="setRating(this)">2</button><button class="rating-btn" onclick="setRating(this)">3</button><button class="rating-btn" onclick="setRating(this)">4</button><button class="rating-btn" onclick="setRating(this)">5</button></div></div>
+      </div>
+
+      <div class="field-group">
+        <div class="field-label">Client's Own Words <span class="field-hint">verbatim quotes become your value story</span></div>
+        <textarea placeholder="Capture the exact phrases the client uses. 'Our agents hate Mondays' is more useful than 'high attrition in servicing.'"></textarea>
+      </div>
+    </section>
+
+    <!-- ══ 03 CURRENT STATE ══ -->
+    <section class="section" id="s-current">
+      <div class="section-header">
+        <div class="section-number">03</div>
+        <div>
+          <div class="section-eyebrow" style="color:var(--amber)">Baseline</div>
+          <div class="section-title">Current State Metrics</div>
+          <div class="section-desc">Today's numbers. These are the ROI baseline — the more specific, the sharper the case.</div>
+        </div>
+      </div>
+
+      <div class="insight-box amber-box">
+        <strong>⚡ FDAPM Tip</strong>
+        When clients don't have exact numbers, use ranges or estimates — never leave blank. An informed estimate with a documented assumption is defensible. Flag unknowns as discovery items.
+      </div>
+
+      <div class="three-col">
+        <div class="field-group"><div class="field-label">Avg Handle Time (AHT)</div><input type="text" id="m-aht" placeholder="6:45 min"></div>
+        <div class="field-group"><div class="field-label">First Contact Resolution</div><input type="text" id="m-fcr" placeholder="68%"></div>
+        <div class="field-group"><div class="field-label">Abandonment Rate</div><input type="text" id="m-abandon" placeholder="12%"></div>
+      </div>
+      <div class="three-col">
+        <div class="field-group"><div class="field-label">CSAT Score</div><input type="text" id="m-csat" placeholder="72/100"></div>
+        <div class="field-group"><div class="field-label">NPS</div><input type="text" id="m-nps" placeholder="+22"></div>
+        <div class="field-group"><div class="field-label">Customer Effort Score</div><input type="text" id="m-ces" placeholder="3.2/5"></div>
+      </div>
+      <div class="three-col">
+        <div class="field-group"><div class="field-label">Cost Per Contact</div><input type="text" id="m-cpc" placeholder="$8.40"></div>
+        <div class="field-group"><div class="field-label">IVR Containment</div><input type="text" id="m-ivr" placeholder="18%"></div>
+        <div class="field-group"><div class="field-label">Digital Containment</div><input type="text" id="m-digital" placeholder="12%"></div>
+      </div>
+      <div class="three-col">
+        <div class="field-group"><div class="field-label">Avg Speed to Answer</div><input type="text" id="m-asa" placeholder="2:10 min"></div>
+        <div class="field-group"><div class="field-label">After-Call Work</div><input type="text" id="m-acw" placeholder="1:45 min"></div>
+        <div class="field-group"><div class="field-label">Annual Agent Turnover</div><input type="text" id="m-turnover" placeholder="38%"></div>
+      </div>
+      <div class="two-col">
+        <div class="field-group">
+          <div class="field-label">Current Channels Supported</div>
+          <div class="pill-row" id="pills-channels">
+            <span class="pill" onclick="togglePillMulti(this)">Voice</span>
+            <span class="pill" onclick="togglePillMulti(this)">Email</span>
+            <span class="pill" onclick="togglePillMulti(this)">Web Chat</span>
+            <span class="pill" onclick="togglePillMulti(this)">SMS</span>
+            <span class="pill" onclick="togglePillMulti(this)">Social</span>
+            <span class="pill" onclick="togglePillMulti(this)">Mobile App</span>
+            <span class="pill" onclick="togglePillMulti(this)">WhatsApp</span>
+          </div>
+        </div>
+        <div class="field-group"><div class="field-label">Annual CC Budget</div><input type="text" id="m-budget" placeholder="$4.2M"></div>
+      </div>
+      <div class="field-group">
+        <div class="field-label">Current Platform Stack <span class="field-hint">ACD, CRM, WFM, QM + pain with each</span></div>
+        <textarea id="m-stack" placeholder="List every system touching the contact center. Note pain with each, integration gaps, context switches…" style="min-height:80px;"></textarea>
+      </div>
+      <div class="field-group">
+        <div class="field-label">What's Working Well Today <span class="field-hint">preserve, don't disrupt</span></div>
+        <textarea id="m-working" placeholder="Acknowledging strengths builds trust and shapes what to preserve…" style="min-height:60px;"></textarea>
+      </div>
+    </section>
+
+    <!-- ══ 04 WORKFLOW ══ -->
+    <section class="section" id="s-workflow">
+      <div class="section-header">
+        <div class="section-number">04</div>
+        <div>
+          <div class="section-eyebrow" style="color:var(--mint)">Discovery</div>
+          <div class="section-title">Workflow Mapping</div>
+          <div class="section-desc">Walk through the target workflow step-by-step. Identify automation opportunities and human-required moments.</div>
+        </div>
+      </div>
+
+      <div class="insight-box mint-box">
+        <strong>🔍 Structured Discovery Protocol</strong>
+        For each target workflow, document the steps. Tag each as <code>HUMAN</code>, <code>AI</code>, or <code>HYBRID</code>. Shadow the workflow in production before finalizing — what agents say they do and what they actually do often diverge.
+      </div>
+
+      <div class="field-group">
+        <div class="field-label">Workflow Being Mapped <span class="field-hint">one workflow at a time</span></div>
+        <input type="text" id="wf-name" placeholder="e.g. 'Card dispute initiation — inbound call to resolution'">
+      </div>
+
+      <div class="workflow-intro">
+        Define each step: what happens, who does it, and whether it's <strong>AI-ready</strong>, must stay <strong>human</strong>, or is a <strong>hybrid</strong> opportunity.
+      </div>
+
+      <div class="workflow-list" id="workflow-steps"></div>
+      <div style="margin-top:0.8rem; display:flex; gap:0.5rem;">
+        <button class="btn btn-ghost" onclick="addWorkflowStep()">+ Add Step</button>
+        <button class="btn btn-ghost" onclick="addWorkflowStep('', '', '', 'ai')">+ AI Step</button>
+        <button class="btn btn-ghost" onclick="addWorkflowStep('', '', '', 'human')">+ Human Step</button>
+      </div>
+
+      <div class="two-col" style="margin-top:1.5rem;">
+        <div class="field-group">
+          <div class="field-label">Shadowing Completed? <span class="field-hint">observed the workflow live?</span></div>
+          <div class="pill-row" id="pills-shadow">
+            <span class="pill" onclick="togglePill(this,'pills-shadow')">✓ Yes — full shift</span>
+            <span class="pill" onclick="togglePill(this,'pills-shadow')">◐ Partial — recordings</span>
+            <span class="pill" onclick="togglePill(this,'pills-shadow')">○ Scheduled</span>
+            <span class="pill" onclick="togglePill(this,'pills-shadow')">✗ Blocked</span>
+          </div>
+        </div>
+        <div class="field-group">
+          <div class="field-label">Documentation Source</div>
+          <div class="pill-row" id="pills-docsource">
+            <span class="pill" onclick="togglePillMulti(this)">Agent interviews</span>
+            <span class="pill" onclick="togglePillMulti(this)">SOPs / runbooks</span>
+            <span class="pill" onclick="togglePillMulti(this)">Call recordings</span>
+            <span class="pill" onclick="togglePillMulti(this)">Live shadow</span>
+            <span class="pill" onclick="togglePillMulti(this)">Screen recordings</span>
+            <span class="pill" onclick="togglePillMulti(this)">QA scorecards</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <div class="field-label">Edge Cases &amp; Exception Paths <span class="field-hint">the 10% that kills automation</span></div>
+        <textarea id="wf-edge" placeholder="What happens when authentication fails? When the core system is down? When the customer is hostile? Edge cases decide whether automation ships or fails."></textarea>
+      </div>
+
+      <div class="field-group">
+        <div class="field-label">Discovery Gaps <span class="field-hint">what you still don't know</span></div>
+        <textarea id="wf-gaps" placeholder="Honest list: unknown handoff steps, unclear compliance requirements, access blockers, SME availability. This becomes your follow-up action list." style="min-height:60px;"></textarea>
+      </div>
+    </section>
+
+    <!-- ══ 05 AUTOMATION MAP ══ -->
+    <section class="section" id="s-usecases">
+      <div class="section-header">
+        <div class="section-number">05</div>
+        <div>
+          <div class="section-eyebrow" style="color:var(--blue)">Scope</div>
+          <div class="section-title">Automation Opportunity Map</div>
+          <div class="section-desc">Select every use case in scope. Color-coded by category. These feed the pilot roadmap and sequencing.</div>
+        </div>
+      </div>
+
+      <div class="use-case-grid">
+        <div class="use-case-card" onclick="cycleUC(this,'voice')"><div class="uc-icon">📞</div><div class="uc-name">IVR Modernization</div><span class="uc-tag tag-voice">Voice</span></div>
+        <div class="use-case-card" onclick="cycleUC(this,'ai')"><div class="uc-icon">🤖</div><div class="uc-name">Conversational AI / Autopilot</div><span class="uc-tag tag-ai">AI</span></div>
+        <div class="use-case-card" onclick="cycleUC(this,'ai')"><div class="uc-icon">🧬</div><div class="uc-name">Agentic AI (Multi-Step)</div><span class="uc-tag tag-ai">AI</span></div>
+        <div class="use-case-card" onclick="cycleUC(this,'voice')"><div class="uc-icon">🔁</div><div class="uc-name">Intelligent Routing / Navigator</div><span class="uc-tag tag-voice">Voice</span></div>
+        <div class="use-case-card" onclick="cycleUC(this,'voice')"><div class="uc-icon">📲</div><div class="uc-name">Callback / Virtual Hold</div><span class="uc-tag tag-voice">Voice</span></div>
+        <div class="use-case-card" onclick="cycleUC(this,'digital')"><div class="uc-icon">💬</div><div class="uc-name">Live Web Chat</div><span class="uc-tag tag-digital">Digital</span></div>
+        <div class="use-case-card" onclick="cycleUC(this,'digital')"><div class="uc-icon">📱</div><div class="uc-name">SMS / Text Support</div><span class="uc-tag tag-digital">Digital</span></div>
+        <div class="use-case-card" onclick="cycleUC(this,'ai')"><div class="uc-icon">🧠</div><div class="uc-name">Agent Copilot</div><span class="uc-tag tag-ai">AI</span></div>
+        <div class="use-case-card" onclick="cycleUC(this,'ai')"><div class="uc-icon">✍️</div><div class="uc-name">Auto Summarization / ACW</div><span class="uc-tag tag-ai">AI</span></div>
+        <div class="use-case-card" onclick="cycleUC(this,'ai')"><div class="uc-icon">🎯</div><div class="uc-name">AI Quality Management</div><span class="uc-tag tag-ai">AI</span></div>
+        <div class="use-case-card" onclick="cycleUC(this,'digital')"><div class="uc-icon">📧</div><div class="uc-name">Email Queue Management</div><span class="uc-tag tag-digital">Digital</span></div>
+        <div class="use-case-card" onclick="cycleUC(this,'voice')"><div class="uc-icon">📣</div><div class="uc-name">Agentic Outbound</div><span class="uc-tag tag-voice">Voice</span></div>
+        <div class="use-case-card" onclick="cycleUC(this,'ai')"><div class="uc-icon">📊</div><div class="uc-name">Interaction Analytics</div><span class="uc-tag tag-ai">AI</span></div>
+        <div class="use-case-card" onclick="cycleUC(this,'ai')"><div class="uc-icon">🗓️</div><div class="uc-name">WFM / Forecasting</div><span class="uc-tag tag-ai">AI</span></div>
+        <div class="use-case-card" onclick="cycleUC(this,'digital')"><div class="uc-icon">🌐</div><div class="uc-name">Social Channel Support</div><span class="uc-tag tag-digital">Digital</span></div>
+        <div class="use-case-card" onclick="cycleUC(this,'ai')"><div class="uc-icon">🔗</div><div class="uc-name">Automation Flows</div><span class="uc-tag tag-ai">AI</span></div>
+        <!-- FSI -->
+        <div class="use-case-card" onclick="cycleUC(this,'fsi')"><div class="uc-icon">🏦</div><div class="uc-name">Balance &amp; Transaction Inquiry</div><span class="uc-tag tag-fsi">FSI</span></div>
+        <div class="use-case-card" onclick="cycleUC(this,'fsi')"><div class="uc-icon">💳</div><div class="uc-name">Card Controls &amp; Servicing</div><span class="uc-tag tag-fsi">FSI</span></div>
+        <div class="use-case-card" onclick="cycleUC(this,'fsi')"><div class="uc-icon">🚨</div><div class="uc-name">Fraud Alert Handling</div><span class="uc-tag tag-fsi">FSI</span></div>
+        <div class="use-case-card" onclick="cycleUC(this,'fsi')"><div class="uc-icon">⚖️</div><div class="uc-name">Dispute Initiation</div><span class="uc-tag tag-fsi">FSI</span></div>
+        <div class="use-case-card" onclick="cycleUC(this,'fsi')"><div class="uc-icon">💰</div><div class="uc-name">Loan Status / Payoff</div><span class="uc-tag tag-fsi">FSI</span></div>
+        <div class="use-case-card" onclick="cycleUC(this,'fsi')"><div class="uc-icon">📞</div><div class="uc-name">Collections Outreach</div><span class="uc-tag tag-fsi">FSI</span></div>
+        <div class="use-case-card" onclick="cycleUC(this,'fsi')"><div class="uc-icon">🆔</div><div class="uc-name">Identity / KYC</div><span class="uc-tag tag-fsi">FSI</span></div>
+        <div class="use-case-card" onclick="cycleUC(this,'fsi')"><div class="uc-icon">📝</div><div class="uc-name">Account Origination</div><span class="uc-tag tag-fsi">FSI</span></div>
+      </div>
+
+      <div class="field-group" style="margin-top:1.5rem;">
+        <div class="field-label">Phase 1 Pilot Candidate <span class="field-hint">0→1 deployment in 30–90 days</span></div>
+        <textarea placeholder="Which 1–2 use cases, if delivered first, create visible wins for the champion AND prove the scaling motion?"></textarea>
+      </div>
+      <div class="field-group">
+        <div class="field-label">12-Month Production Vision</div>
+        <textarea placeholder="What does a fully transformed contact center look like 12 months from pilot kickoff? Describe the future state the client will defend to their board."></textarea>
+      </div>
+    </section>
+
+    <!-- ══ 06 KPIs ══ -->
+    <section class="section" id="s-kpis">
+      <div class="section-header">
+        <div class="section-number">06</div>
+        <div>
+          <div class="section-eyebrow" style="color:var(--td-purple)">Measurement</div>
+          <div class="section-title">KPIs &amp; Success Metrics</div>
+          <div class="section-desc">Defined targets, defined owners, defined cadence. This becomes your QBR scorecard.</div>
+        </div>
+      </div>
+
+      <div class="insight-box">
+        <strong>🎯 How FDAPM Success Is Measured</strong>
+        Beyond the client's KPIs, this role is evaluated on five outcome indicators — added below with the <strong>FDAPM</strong> tag. Goals your client co-creates are goals they defend internally. Ask: "What number, in 6 months, would make your leadership team take notice?"
+      </div>
+
+      <table class="kpi-table">
+        <thead>
+          <tr>
+            <th style="width:28%">Metric</th>
+            <th style="width:13%">Current</th>
+            <th style="width:13%">Target</th>
+            <th style="width:13%">Timeline</th>
+            <th style="width:18%">Owner</th>
+            <th style="width:15%">Priority</th>
+          </tr>
+        </thead>
+        <tbody id="kpiBody"></tbody>
+      </table>
+
+      <div style="display:flex; gap:0.5rem; margin-top:0.8rem;">
+        <button class="btn btn-ghost" onclick="addKPIRow()">+ Add KPI</button>
+        <button class="btn btn-ghost" onclick="addFDAPMKPIs()">+ Add FDAPM Success Metrics</button>
+      </div>
+
+      <div class="field-group" style="margin-top:1.5rem;">
+        <div class="field-label">Reporting Cadence &amp; Governance</div>
+        <div class="pill-row" id="pills-reporting">
+          <span class="pill" onclick="togglePillMulti(this)">Monthly Review</span>
+          <span class="pill" onclick="togglePillMulti(this)">Quarterly QBR</span>
+          <span class="pill" onclick="togglePillMulti(this)">Real-Time Dashboard</span>
+          <span class="pill" onclick="togglePillMulti(this)">Executive Scorecard</span>
+          <span class="pill" onclick="togglePillMulti(this)">Weekly Pilot Standup</span>
+          <span class="pill" onclick="togglePillMulti(this)">Post-Pilot Readout</span>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <div class="field-label">Leadership's North Star Metric <span class="field-hint">what gets them promoted?</span></div>
+        <textarea placeholder="Cost reduction? NPS? NRR? Service-to-sales? Compliance pass rate? The metric on their board deck is the anchor for the entire engagement."></textarea>
+      </div>
+    </section>
+
+    <!-- ══ 07 ROI ══ -->
+    <section class="section" id="s-roi">
+      <div class="section-header">
+        <div class="section-number">07</div>
+        <div>
+          <div class="section-eyebrow" style="color:var(--amber)">Business Case</div>
+          <div class="section-title">ROI Modeling</div>
+          <div class="section-desc">Translate outcomes to dollars. Conservative numbers defended beat optimistic numbers handwaved.</div>
+        </div>
+      </div>
+
+      <div class="insight-box amber-box">
+        <strong>💰 Four ROI Levers</strong>
+        (1) Cost reduction via automation &amp; efficiency · (2) Revenue protection via CSAT &amp; retention · (3) Revenue generation via service-to-sales · (4) Risk reduction via compliance. Quantify at least two. All assumptions documented.
+      </div>
+
+      <div class="lever-label">Lever 1 — Handle Time &amp; Automation <small>·  efficiency gains</small></div>
+      <div class="roi-grid">
+        <div class="roi-cell"><label>Monthly Contact Volume</label><input type="number" id="roi-volume" placeholder="42000" oninput="calcROI()"></div>
+        <div class="roi-cell"><label>Current AHT (min)</label><input type="number" id="roi-aht" placeholder="6.75" step="0.25" oninput="calcROI()"></div>
+        <div class="roi-cell"><label>AHT Reduction Target (%)</label><input type="number" id="roi-aht-red" placeholder="15" oninput="calcROI()"></div>
+        <div class="roi-cell"><label>Loaded Agent Cost ($/hr)</label><input type="number" id="roi-agent-cost" placeholder="28" oninput="calcROI()"></div>
+      </div>
+      <div class="roi-grid" style="grid-template-columns:1fr 1fr 1fr;">
+        <div class="roi-cell"><div class="roi-output" id="roi-hours-saved">—</div><div class="roi-output-label">Hours Saved / Month</div></div>
+        <div class="roi-cell"><div class="roi-output" id="roi-monthly-save">—</div><div class="roi-output-label">Monthly Savings</div></div>
+        <div class="roi-cell"><div class="roi-output" id="roi-annual-save">—</div><div class="roi-output-label">Annual Savings</div></div>
+      </div>
+
+      <div class="lever-label" style="margin-top:1.5rem;">Lever 2 — Self-Service Containment <small>· deflection</small></div>
+      <div class="roi-grid">
+        <div class="roi-cell"><label>Current Containment (%)</label><input type="number" id="roi-ss-current" placeholder="18" oninput="calcROI2()"></div>
+        <div class="roi-cell"><label>Target Containment (%)</label><input type="number" id="roi-ss-target" placeholder="35" oninput="calcROI2()"></div>
+        <div class="roi-cell"><label>Cost Per Live Contact ($)</label><input type="number" id="roi-cpc" placeholder="8.40" step="0.10" oninput="calcROI2()"></div>
+        <div class="roi-cell"><label>Cost Per Self-Service ($)</label><input type="number" id="roi-ss-cost" placeholder="0.85" step="0.05" oninput="calcROI2()"></div>
+      </div>
+      <div class="roi-grid" style="grid-template-columns:1fr 1fr;">
+        <div class="roi-cell"><div class="roi-output" id="roi-deflected">—</div><div class="roi-output-label">Contacts Deflected / Month</div></div>
+        <div class="roi-cell"><div class="roi-output" id="roi-ss-annual">—</div><div class="roi-output-label">Annual Containment Savings</div></div>
+      </div>
+
+      <div class="lever-label" style="margin-top:1.5rem;">Lever 3 — Agent Retention <small>· reducing turnover cost</small></div>
+      <div class="roi-grid">
+        <div class="roi-cell"><label># of Agents</label><input type="number" id="roi-agents" placeholder="120" oninput="calcROI3()"></div>
+        <div class="roi-cell"><label>Annual Turnover (%)</label><input type="number" id="roi-turnover" placeholder="38" oninput="calcROI3()"></div>
+        <div class="roi-cell"><label>Cost to Replace ($)</label><input type="number" id="roi-replace" placeholder="6500" oninput="calcROI3()"></div>
+        <div class="roi-cell"><label>Turnover Reduction (%)</label><input type="number" id="roi-turnover-red" placeholder="20" oninput="calcROI3()"></div>
+      </div>
+      <div class="roi-grid" style="grid-template-columns:1fr;">
+        <div class="roi-cell"><div class="roi-output" id="roi-retention-save">—</div><div class="roi-output-label">Annual Retention Savings</div></div>
+      </div>
+
+      <div class="lever-label" style="margin-top:1.5rem;">Lever 4 — Risk &amp; Compliance <small>· regulatory exposure avoided</small></div>
+      <div class="roi-grid">
+        <div class="roi-cell"><label>Annual Compliance Risk ($)</label><input type="number" id="roi-risk" placeholder="250000" oninput="calcROI4()"></div>
+        <div class="roi-cell"><label>Risk Reduction Target (%)</label><input type="number" id="roi-risk-red" placeholder="60" oninput="calcROI4()"></div>
+      </div>
+      <div class="roi-grid" style="grid-template-columns:1fr;">
+        <div class="roi-cell"><div class="roi-output" id="roi-risk-save">—</div><div class="roi-output-label">Est. Annual Risk Avoidance</div></div>
+      </div>
+
+      <div class="field-group" style="margin-top:1.5rem;">
+        <div class="field-label">Additional Value Drivers (Qualitative)</div>
+        <textarea placeholder="Service-to-sales revenue, regulatory mitigation, brand protection, competitive differentiation, time-to-market acceleration…"></textarea>
+      </div>
+      <div class="field-group">
+        <div class="field-label">Investment &amp; Payback</div>
+        <textarea placeholder="Platform investment, implementation cost, payback timeline. At what monthly savings does this become a no-brainer?" style="min-height:60px;"></textarea>
+      </div>
+    </section>
+
+    <!-- ══ 08 PILOT ══ -->
+    <section class="section" id="s-pilot">
+      <div class="section-header">
+        <div class="section-number">08</div>
+        <div>
+          <div class="section-eyebrow" style="color:var(--td-purple)">0 → 1</div>
+          <div class="section-title">Pilot Scope &amp; Go-Live Plan</div>
+          <div class="section-desc">Pilots are judged on production graduation rate. Define scope tightly, measure ruthlessly, document everything.</div>
+        </div>
+      </div>
+
+      <div class="pilot-card">
+        <div class="pilot-card-header">
+          <div class="pilot-icon">🚀</div>
+          <div>
+            <div class="pilot-title">Pilot Definition</div>
+            <div class="pilot-sub">Scope · Success Criteria · Timeline</div>
+          </div>
+        </div>
+
+        <div class="two-col">
+          <div class="field-group"><div class="field-label">Pilot Workflow</div><input type="text" placeholder="e.g. Card dispute — inbound voice"></div>
+          <div class="field-group"><div class="field-label">Pilot Duration</div>
+            <div class="pill-row" id="pills-duration">
+              <span class="pill" onclick="togglePill(this,'pills-duration')">4 weeks</span>
+              <span class="pill" onclick="togglePill(this,'pills-duration')">6 weeks</span>
+              <span class="pill" onclick="togglePill(this,'pills-duration')">8 weeks</span>
+              <span class="pill" onclick="togglePill(this,'pills-duration')">12 weeks</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="three-col">
+          <div class="field-group"><div class="field-label">Target Volume (%)</div><input type="text" placeholder="20% of calls"></div>
+          <div class="field-group"><div class="field-label">Pilot Cohort Size</div><input type="text" placeholder="12 agents"></div>
+          <div class="field-group"><div class="field-label">Go-Live Date</div><input type="text" placeholder="2026-08-15"></div>
+        </div>
+
+        <div class="field-group">
+          <div class="field-label">Success Criteria <span class="field-hint">what makes this pilot graduate?</span></div>
+          <textarea placeholder="Quantitative gates for production promotion. Example: ≥25% containment, CSAT within 5% of baseline, zero compliance incidents, stakeholder sign-off from Ops + Compliance + IT."></textarea>
+        </div>
+
+        <div class="field-group">
+          <div class="field-label">Kill Criteria <span class="field-hint">when do we stop?</span></div>
+          <textarea placeholder="Non-negotiable fail conditions. Example: CSAT drops >10%, any regulatory finding, any customer harm event. Document before starting — not after."></textarea>
+        </div>
+
+        <div class="two-col">
+          <div class="field-group">
+            <div class="field-label">Data &amp; Integration Access</div>
+            <div class="pill-row" id="pills-access">
+              <span class="pill" onclick="togglePillMulti(this)">Core Banking API</span>
+              <span class="pill" onclick="togglePillMulti(this)">CRM Access</span>
+              <span class="pill" onclick="togglePillMulti(this)">Call Recordings</span>
+              <span class="pill" onclick="togglePillMulti(this)">Agent Desktops</span>
+              <span class="pill" onclick="togglePillMulti(this)">Knowledge Base</span>
+              <span class="pill" onclick="togglePillMulti(this)">Sandbox Environment</span>
+            </div>
+          </div>
+          <div class="field-group">
+            <div class="field-label">Change Management</div>
+            <div class="pill-row" id="pills-change">
+              <span class="pill" onclick="togglePillMulti(this)">Agent Training</span>
+              <span class="pill" onclick="togglePillMulti(this)">Customer Comms</span>
+              <span class="pill" onclick="togglePillMulti(this)">Supervisor Playbook</span>
+              <span class="pill" onclick="togglePillMulti(this)">Rollback Plan</span>
+              <span class="pill" onclick="togglePillMulti(this)">Compliance Sign-Off</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="field-group">
+          <div class="field-label">Time-to-Value Target <span class="field-hint">kickoff → measurable outcome</span></div>
+          <input type="text" placeholder="e.g. 45 days from kickoff to first measurable deflection">
+        </div>
+
+        <div class="field-group">
+          <div class="field-label">Path to Scale <span class="field-hint">what does 'production' look like?</span></div>
+          <textarea placeholder="How does this scale from pilot cohort to full workflow coverage? What would Phase 2 and Phase 3 look like? Who signs off at each gate?" style="min-height:70px;"></textarea>
+        </div>
+      </div>
+
+      <div class="insight-box">
+        <strong>📐 Design Partner Mindset</strong>
+        This client isn't just a customer — they're a design partner. Patterns you find here likely apply to every similar client. Document reusable artifacts (prompts, flows, integrations, evaluation sets) as you build. The pilot outputs feed the product roadmap.
+      </div>
+
+      <div class="field-group">
+        <div class="field-label">Productizable Patterns <span class="field-hint">what becomes core product?</span></div>
+        <textarea placeholder="Bespoke client configurations that could become reusable features. Industry-specific prompts or workflows. Edge cases that should be handled natively in the platform. This section feeds product &amp; engineering." style="min-height:80px;"></textarea>
+      </div>
+    </section>
+
+    <!-- ══ 09 DELIGHT ══ -->
+    <section class="section" id="s-delight">
+      <div class="section-header">
+        <div class="section-number">09</div>
+        <div>
+          <div class="section-eyebrow" style="color:var(--mint)">Innovation</div>
+          <div class="section-title">Delight &amp; Strategic Insights</div>
+          <div class="section-desc">Ideas your client hasn't imagined yet. This is what separates a vendor from a strategic partner.</div>
+        </div>
+      </div>
+
+      <div class="insight-box">
+        <strong>✨ The Differentiator</strong>
+        Present 2–3 of these as genuine insights tailored to their situation. The goal isn't to close — it's to expand their vision of what's possible. This is where you earn "trusted advisor" status.
+      </div>
+
+      <div class="delight-list">
+        <div class="delight-item">
+          <div class="delight-item-header" onclick="toggleDelight(this)">
+            <div class="delight-icon">🎭</div>
+            <div><div class="delight-title">Honesty Gap Intelligence</div><div class="delight-subtitle">Customers tell bots what they won't tell humans</div></div>
+            <div class="delight-expand">▾</div>
+          </div>
+          <div class="delight-body">
+            <p>Research consistently shows customers disclose more honestly to automated systems than to human agents — especially on sensitive topics like financial hardship, overdraft concerns, fraud suspicion, and complaints. Your AI interactions are capturing unfiltered customer language, intent, and concern that human agents rarely hear. This data can train agents on real customer phrasing, surface unmet needs, and inform product and service design. It's a competitive intelligence engine hiding inside your IVR.</p>
+            <textarea placeholder="Specific applicability — collections, hardship, complaint language, product feedback loops…"></textarea>
+          </div>
+        </div>
+
+        <div class="delight-item">
+          <div class="delight-item-header" onclick="toggleDelight(this)">
+            <div class="delight-icon">🔮</div>
+            <div><div class="delight-title">Predictive Rescue Before the Call</div><div class="delight-subtitle">Intervene before a customer becomes a complaint</div></div>
+            <div class="delight-expand">▾</div>
+          </div>
+          <div class="delight-body">
+            <p>Combining digital behavior signals (web, app, transaction data) with contact history, AI can predict which customers are likely to call — and why — before they pick up. A proactive SMS, in-app message, or outbound call at the right moment deflects the reactive contact entirely, improves CSAT, and signals to the customer that you're paying attention. This flips your contact center from reactive to proactive.</p>
+            <textarea placeholder="Trigger events — failed transactions, delinquency, product usage drop, onboarding friction…"></textarea>
+          </div>
+        </div>
+
+        <div class="delight-item">
+          <div class="delight-item-header" onclick="toggleDelight(this)">
+            <div class="delight-icon">🛡️</div>
+            <div><div class="delight-title">Proactive Fraud Intervention</div><div class="delight-subtitle">Convert reactive fraud calls into trust moments</div></div>
+            <div class="delight-expand">▾</div>
+          </div>
+          <div class="delight-body">
+            <p>Fraud detection models often flag anomalous transactions minutes before the customer notices. Instead of waiting for the angry inbound call, initiate a secure AI-driven outbound contact the instant the flag fires — "we saw something unusual; was this you?" — with one-tap confirm or dispute. The call that would have destroyed trust now demonstrates protection. This single workflow shifts customer perception of the institution from "slow" to "vigilant."</p>
+            <textarea placeholder="Current fraud platform, outbound capability, customer preference data…"></textarea>
+          </div>
+        </div>
+
+        <div class="delight-item">
+          <div class="delight-item-header" onclick="toggleDelight(this)">
+            <div class="delight-icon">💰</div>
+            <div><div class="delight-title">Service-to-Sales Intelligence</div><div class="delight-subtitle">Trust peaks are revenue moments</div></div>
+            <div class="delight-expand">▾</div>
+          </div>
+          <div class="delight-body">
+            <p>Every resolved service interaction is a trust peak — customer confidence is highest right after you've helped them. AI can identify the right moment (post-resolution sentiment, product gaps, life event signals) and surface a relevant next-best offer to the agent or bot. This isn't aggressive selling; it's contextual relevance. Service-originated revenue becomes a measurable contribution to growth, not just a cost offset.</p>
+            <textarea placeholder="Product adjacency opportunities, life event triggers, current service-to-sales program…"></textarea>
+          </div>
+        </div>
+
+        <div class="delight-item">
+          <div class="delight-item-header" onclick="toggleDelight(this)">
+            <div class="delight-icon">🌊</div>
+            <div><div class="delight-title">Emotion-Aware Routing</div><div class="delight-subtitle">Match customers to agents by emotional signature</div></div>
+            <div class="delight-expand">▾</div>
+          </div>
+          <div class="delight-body">
+            <p>Beyond skills-based routing, AI can detect customer sentiment and emotional state in real time and route to an agent whose style matches that customer's profile. An anxious caller routes to a calm, methodical agent. An angry high-value customer routes to your best retention specialist. This reduces escalations, improves FCR, and makes agents feel set up to succeed.</p>
+            <textarea placeholder="Current escalation rates, high-value segment handling, agent profiling capability…"></textarea>
+          </div>
+        </div>
+
+        <div class="delight-item">
+          <div class="delight-item-header" onclick="toggleDelight(this)">
+            <div class="delight-icon">🎓</div>
+            <div><div class="delight-title">Real Conversation Training Data</div><div class="delight-subtitle">Train agents with what customers actually say</div></div>
+            <div class="delight-expand">▾</div>
+          </div>
+          <div class="delight-body">
+            <p>Most contact center training uses scripted role-plays and generic scenarios. With speech and text analytics running across 100% of interactions, you have an archive of every real objection, every real confusion point, every breakthrough moment. This becomes raw material for next-gen training: curated real call clips, AI-extracted best practices, and coaching programs grounded in what works with <em>your</em> customers — not a training vendor's assumptions.</p>
+            <textarea placeholder="Current QA/training programs, coaching cadence, new agent ramp time…"></textarea>
+          </div>
+        </div>
+
+        <div class="delight-item">
+          <div class="delight-item-header" onclick="toggleDelight(this)">
+            <div class="delight-icon">🧬</div>
+            <div><div class="delight-title">Channel Preference Learning</div><div class="delight-subtitle">Stop routing customers to channels they don't want</div></div>
+            <div class="delight-expand">▾</div>
+          </div>
+          <div class="delight-body">
+            <p>Every customer has a preferred channel — and most platforms ignore it. By learning individual channel behavior, your system can proactively reach out on the channel each customer actually responds to, deflect inbound to preferred digital channels, and never send an elderly customer to a chatbot they hate. This improves containment, reduces friction, and makes every interaction feel personalized.</p>
+            <textarea placeholder="Channel mix, customer demographics, current omnichannel maturity…"></textarea>
+          </div>
+        </div>
+
+        <div class="delight-item">
+          <div class="delight-item-header" onclick="toggleDelight(this)">
+            <div class="delight-icon">🏆</div>
+            <div><div class="delight-title">Agent Wellbeing as a KPI</div><div class="delight-subtitle">The most underinvested lever</div></div>
+            <div class="delight-expand">▾</div>
+          </div>
+          <div class="delight-body">
+            <p>Agent experience directly predicts customer experience — yet most centers measure performance but not wellbeing. AI can monitor for burnout signals (consecutive difficult calls, declining quality, increasing ACW, sentiment degradation) and trigger proactive interventions: a break recommendation, supervisor check-in, or queue adjustment before a good agent becomes a turnover statistic. Every agent retained saves $4K–$10K in replacement costs.</p>
+            <textarea placeholder="Current turnover, agent feedback programs, supervisor bandwidth, wellness initiatives…"></textarea>
+          </div>
+        </div>
+
+        <div class="delight-item">
+          <div class="delight-item-header" onclick="toggleDelight(this)">
+            <div class="delight-icon">🔄</div>
+            <div><div class="delight-title">Design Partner → Product Motion</div><div class="delight-subtitle">Your feedback shapes the roadmap</div></div>
+            <div class="delight-expand">▾</div>
+          </div>
+          <div class="delight-body">
+            <p>You're not just a customer — you're a design partner. Workflow patterns you surface, edge cases you encounter, and configurations we build for you become the raw material for product features that ship to the broader customer base. This means faster, better-fitted capability releases that solve problems <em>you</em> defined. You're shaping the platform you depend on rather than waiting for it.</p>
+            <textarea placeholder="Candidate patterns to productize, feedback loop cadence, client engagement model…"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="field-group" style="margin-top:1.5rem;">
+        <div class="field-label">Your Own Insight <span class="field-hint">unique to this engagement</span></div>
+        <textarea placeholder="What have you heard that suggests an opportunity no one has named yet? Capture it before you leave the room."></textarea>
+      </div>
+    </section>
+
+    <!-- ══ 10 SUMMARY ══ -->
+    <section class="section" id="s-summary">
+      <div class="section-header">
+        <div class="section-number">10</div>
+        <div>
+          <div class="section-eyebrow" style="color:var(--td-purple)">Close</div>
+          <div class="section-title">Engagement Summary</div>
+          <div class="section-desc">The narrative, the commitments, the lock-in. This page is what travels to your team and manager.</div>
+        </div>
+      </div>
+
+      <div class="readiness-grid">
+        <div class="readiness-cell"><div class="readiness-value" id="sum-pain" style="color:var(--coral)">—</div><div class="readiness-label">Pain Areas</div></div>
+        <div class="readiness-cell"><div class="readiness-value" id="sum-uc" style="color:var(--blue)">—</div><div class="readiness-label">Use Cases</div></div>
+        <div class="readiness-cell"><div class="readiness-value" id="sum-wf" style="color:var(--mint)">—</div><div class="readiness-label">Workflow Steps</div></div>
+        <div class="readiness-cell"><div class="readiness-value" id="sum-roi" style="color:var(--td-purple)">—</div><div class="readiness-label">Est. Annual ROI</div></div>
+      </div>
+
+      <div class="field-group">
+        <div class="field-label">Narrative Summary <span class="field-hint">the story you'll tell</span></div>
+        <textarea placeholder="3–5 sentences: Who is this client, what's their biggest problem, what does the future state look like, and why is the timing right? This becomes your executive brief." style="min-height:110px;"></textarea>
+      </div>
+
+      <div class="two-col">
+        <div class="field-group">
+          <div class="field-label">Agreed Next Steps &amp; Owners</div>
+          <textarea placeholder="1. Follow-up summary sent by [date] — [owner]&#10;2. Pilot scope SOW by [date] — [owner]&#10;3. Stakeholder meeting — [owner]&#10;4. Integration access request — [owner]"></textarea>
+        </div>
+        <div class="field-group">
+          <div class="field-label">Risks &amp; Blockers</div>
+          <textarea placeholder="Budget constraints, IT bandwidth, internal politics, incumbent vendor loyalty, compliance, procurement, stakeholder misalignment…"></textarea>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <div class="field-label">Client Sentiment Read <span class="field-hint">honest read of the room</span></div>
+        <div class="pill-row" id="pills-sentiment">
+          <span class="pill" onclick="togglePill(this,'pills-sentiment')">🔥 Highly Motivated</span>
+          <span class="pill" onclick="togglePill(this,'pills-sentiment')">✅ Engaged</span>
+          <span class="pill" onclick="togglePill(this,'pills-sentiment')">🤔 Curious but Cautious</span>
+          <span class="pill" onclick="togglePill(this,'pills-sentiment')">😐 Skeptical</span>
+          <span class="pill" onclick="togglePill(this,'pills-sentiment')">🚧 Constrained</span>
+          <span class="pill" onclick="togglePill(this,'pills-sentiment')">⏳ Long Timeline</span>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <div class="field-label">Champion Assessment <span class="field-hint">who fights for this internally?</span></div>
+        <textarea placeholder="Who was most engaged? Do they have budget authority? What motivates them — career, cost, customer mission, regulatory pressure?" style="min-height:70px;"></textarea>
+      </div>
+
+      <div class="field-group">
+        <div class="field-label">The Win Statement <span class="field-hint">one outcome, in the client's words</span></div>
+        <textarea placeholder="Quote or paraphrase the single outcome the client said would define success. This becomes your north star." style="min-height:70px;"></textarea>
+      </div>
+
+      <div class="field-group">
+        <div class="field-label">Product Feedback to Carry Back <span class="field-hint">FDAPM responsibility</span></div>
+        <textarea placeholder="What should product &amp; engineering hear about from this engagement? Gaps, edge cases, opportunities, competitive intel." style="min-height:80px;"></textarea>
+      </div>
+
+      <div class="action-bar">
+        <button class="btn btn-primary" onclick="window.print()">⬇ Print / Export PDF</button>
+        <button class="btn btn-sf" onclick="openSFModal()">☁ Save to Salesforce</button>
+        <button class="btn btn-ghost" onclick="exportJSON()">↓ Export JSON</button>
+        <button class="btn btn-ghost" onclick="clearAll()">↺ Reset</button>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- ══ SALESFORCE MODAL ══ -->
+<div id="sfOverlay" class="sf-overlay" onclick="if(event.target===this)closeSFModal()">
+  <div class="sf-modal">
+    <div class="sf-modal-header">
+      <div>
+        <div class="sf-modal-eyebrow">Salesforce Integration</div>
+        <div class="sf-modal-title">Save to CRM</div>
+      </div>
+      <button class="sf-close" onclick="closeSFModal()">✕</button>
+    </div>
+
+    <div class="sf-step" id="sf-step-1">
+      <div class="sf-step-label">Step 1 of 3 — Connect to Salesforce</div>
+      <div class="sf-field-group"><label>Salesforce Instance URL</label><input type="text" id="sf-instance" placeholder="https://yourorg.my.salesforce.com"></div>
+      <div class="sf-field-group"><label>Access Token <span style="color:var(--text-muted);font-size:10px;font-weight:400;">— generate in Setup › API</span></label><input type="text" id="sf-token" placeholder="00D..."></div>
+      <div class="sf-modal-footer">
+        <button class="btn btn-ghost" onclick="closeSFModal()">Cancel</button>
+        <button class="btn btn-sf" onclick="sfStep(2)">Next →</button>
+      </div>
+    </div>
+
+    <div class="sf-step" id="sf-step-2" style="display:none">
+      <div class="sf-step-label">Step 2 of 3 — Choose Record Type</div>
+      <div class="sf-object-grid">
+        <div class="sf-object-card selected" onclick="selectSFObject(this,'opportunity')" data-obj="opportunity"><div class="sf-object-icon">💼</div><div class="sf-object-name">Opportunity</div><div class="sf-object-desc">Opportunity with ROI-based amount, stage, close date.</div></div>
+        <div class="sf-object-card" onclick="selectSFObject(this,'account')" data-obj="account"><div class="sf-object-icon">🏢</div><div class="sf-object-name">Account + Contact</div><div class="sf-object-desc">Account for company, Contact for stakeholder.</div></div>
+        <div class="sf-object-card" onclick="selectSFObject(this,'task')" data-obj="task"><div class="sf-object-icon">📋</div><div class="sf-object-name">Activity Log</div><div class="sf-object-desc">Logs session as completed Task with full notes.</div></div>
+        <div class="sf-object-card" onclick="selectSFObject(this,'all')" data-obj="all"><div class="sf-object-icon">⚡</div><div class="sf-object-name">All of the Above</div><div class="sf-object-desc">Account + Contact + Opportunity + Activity.</div></div>
+      </div>
+      <div class="sf-modal-footer">
+        <button class="btn btn-ghost" onclick="sfStep(1)">← Back</button>
+        <button class="btn btn-sf" onclick="sfStep(3)">Review →</button>
+      </div>
+    </div>
+
+    <div class="sf-step" id="sf-step-3" style="display:none">
+      <div class="sf-step-label">Step 3 of 3 — Review &amp; Push</div>
+      <div id="sf-review" class="sf-review"></div>
+      <div class="sf-field-group" style="margin-top:1rem;"><label>Owner</label><input type="text" id="sf-owner" placeholder="user@yourcompany.com"></div>
+      <div id="sf-status" class="sf-status" style="display:none"></div>
+      <div class="sf-modal-footer">
+        <button class="btn btn-ghost" onclick="sfStep(2)">← Back</button>
+        <button class="btn btn-sf" id="sf-push-btn" onclick="sfPush()">☁ Push to Salesforce</button>
+      </div>
+    </div>
+
+    <div class="sf-step" id="sf-step-success" style="display:none">
+      <div class="sf-success">
+        <div class="sf-success-icon">✓</div>
+        <div class="sf-success-title">Pushed to Salesforce</div>
+        <div class="sf-success-sub">Records created successfully.</div>
+        <div id="sf-result-links" class="sf-result-links"></div>
+      </div>
+      <div class="sf-modal-footer" style="justify-content:center;">
+        <button class="btn btn-sf" onclick="closeSFModal()">Done</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast">Saved</div>
+
+<script>
+document.getElementById('sessionDate').placeholder = new Date().toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
+
+const glow = document.getElementById('cursorGlow');
+document.addEventListener('mousemove', e => { glow.style.left = e.clientX + 'px'; glow.style.top = e.clientY + 'px'; });
+
+function togglePill(el, group) {
+  const parent = document.getElementById(group);
+  if (!parent) return;
+  parent.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+  updateProgress();
+}
+function togglePillMulti(el) { el.classList.toggle('active'); updateProgress(); }
+
+function setRating(btn) {
+  const group = btn.parentElement;
+  const val = parseInt(btn.textContent);
+  group.querySelectorAll('.rating-btn').forEach((b, i) => {
+    b.classList.remove('active-1','active-2','active-3','active-4','active-5');
+    if (i < val) b.classList.add(`active-${val}`);
+  });
+  updateProgress();
+}
+
+function cardToggle(card) { card.classList.toggle('selected'); updateSummary(); updateProgress(); }
+
+function cycleUC(card, type) {
+  const cls = 'selected-' + type;
+  const isSelected = card.classList.contains(cls);
+  card.classList.remove('selected-voice','selected-digital','selected-ai','selected-fsi');
+  if (!isSelected) card.classList.add(cls);
+  updateSummary(); updateProgress();
+}
+
+let workflowCounter = 0;
+function addWorkflowStep(title='', actor='', notes='', type='') {
+  workflowCounter++;
+  const container = document.getElementById('workflow-steps');
+  const row = document.createElement('div');
+  row.className = 'workflow-row';
+  row.dataset.idx = workflowCounter;
+  row.innerHTML = `
+    <div class="workflow-num">${String(workflowCounter).padStart(2,'0')}</div>
+    <input type="text" placeholder="Step description" value="${title}">
+    <input type="text" placeholder="Actor (agent/customer/system)" value="${actor}">
+    <input type="text" placeholder="Notes / exceptions" value="${notes}">
+    <select>
+      <option value="" ${!type?'selected':''}>Type</option>
+      <option value="human" ${type==='human'?'selected':''}>Human</option>
+      <option value="ai" ${type==='ai'?'selected':''}>AI</option>
+      <option value="hybrid" ${type==='hybrid'?'selected':''}>Hybrid</option>
+    </select>
+    <button class="row-del" onclick="this.parentElement.remove(); renumberWorkflow(); updateSummary();">✕</button>
+  `;
+  container.appendChild(row);
+  row.querySelectorAll('input, select').forEach(el => el.addEventListener('input', () => { updateProgress(); updateSummary(); }));
+}
+function renumberWorkflow() {
+  document.querySelectorAll('#workflow-steps .workflow-row').forEach((r, i) => {
+    r.querySelector('.workflow-num').textContent = String(i+1).padStart(2,'0');
+  });
+}
+addWorkflowStep(); addWorkflowStep(); addWorkflowStep();
+
+const defaultKPIs = [
+  ['Average Handle Time (AHT)','','','12 months','Operations', false],
+  ['First Contact Resolution (FCR)','','','12 months','Operations', false],
+  ['CSAT / NPS / CES','','','6 months','CX Leader', false],
+  ['IVR / Digital Containment','','','12 months','Digital', false],
+  ['Cost Per Contact','','','12 months','Finance', false],
+  ['Agent Turnover Rate','','','12 months','HR / Ops', false],
+];
+const fdapmKPIs = [
+  ['Time-to-Value (discovery → production)','','45 days','Per engagement','FDAPM', true],
+  ['Pilot → Production Graduation Rate','','>80%','Per engagement','FDAPM', true],
+  ['Account Expansion / NRR','','','12 months','FDAPM + Account', true],
+  ['Product Feedback Insights Logged','','4+ per quarter','Quarterly','FDAPM', true],
+  ['Client Health / NPS','','>50','Quarterly','FDAPM', true],
+];
+function addKPIRow(vals=[]) {
+  const tbody = document.getElementById('kpiBody');
+  const tr = document.createElement('tr');
+  tr.className = 'kpi-row' + (vals[5] ? ' fdapm-native' : '');
+  const namePrefix = vals[5] ? '<span class="kpi-native-label">FDAPM</span>' : '';
+  tr.innerHTML = `
+    <td>${namePrefix}<input type="text" placeholder="Metric" value="${vals[0]||''}"></td>
+    <td><input type="text" placeholder="Today" value="${vals[1]||''}"></td>
+    <td><input type="text" placeholder="Goal" value="${vals[2]||''}"></td>
+    <td><input type="text" placeholder="Timeline" value="${vals[3]||''}"></td>
+    <td><input type="text" placeholder="Owner" value="${vals[4]||''}"></td>
+    <td><div class="kpi-importance">${[1,2,3,4,5].map(i=>`<div class="imp-dot" onclick="setImp(this,${i})"></div>`).join('')}</div></td>`;
+  tbody.appendChild(tr);
+  tr.querySelectorAll('input').forEach(el => el.addEventListener('input', updateProgress));
+}
+defaultKPIs.forEach(k => addKPIRow(k));
+function addFDAPMKPIs() { fdapmKPIs.forEach(k => addKPIRow(k)); toast('FDAPM metrics added'); }
+function setImp(dot, val) {
+  const row = dot.closest('.kpi-importance');
+  row.querySelectorAll('.imp-dot').forEach((d, i) => d.classList.toggle('lit', i < val));
+}
+
+function fmt(n) {
+  if (isNaN(n) || !isFinite(n) || n === 0) return '—';
+  if (n >= 1000000) return '$' + (n/1000000).toFixed(1) + 'M';
+  if (n >= 1000) return '$' + Math.round(n/1000) + 'K';
+  return '$' + Math.round(n).toLocaleString();
+}
+function fmtN(n) { if (isNaN(n) || !isFinite(n) || n === 0) return '—'; return Math.round(n).toLocaleString(); }
+
+function calcROI() {
+  const vol = parseFloat(document.getElementById('roi-volume').value) || 0;
+  const aht = parseFloat(document.getElementById('roi-aht').value) || 0;
+  const red = parseFloat(document.getElementById('roi-aht-red').value) || 0;
+  const cost = parseFloat(document.getElementById('roi-agent-cost').value) || 0;
+  const hrs = vol * aht * (red/100) / 60;
+  const monthly = hrs * cost;
+  document.getElementById('roi-hours-saved').textContent = fmtN(hrs);
+  document.getElementById('roi-monthly-save').textContent = fmt(monthly);
+  document.getElementById('roi-annual-save').textContent = fmt(monthly * 12);
+  updateSummary();
+}
+function calcROI2() {
+  const vol = parseFloat(document.getElementById('roi-volume').value) || 42000;
+  const cur = parseFloat(document.getElementById('roi-ss-current').value) || 0;
+  const tgt = parseFloat(document.getElementById('roi-ss-target').value) || 0;
+  const cpc = parseFloat(document.getElementById('roi-cpc').value) || 0;
+  const ssc = parseFloat(document.getElementById('roi-ss-cost').value) || 0;
+  const def = vol * Math.max(0, tgt - cur) / 100;
+  const ann = def * (cpc - ssc) * 12;
+  document.getElementById('roi-deflected').textContent = fmtN(def);
+  document.getElementById('roi-ss-annual').textContent = fmt(ann);
+  updateSummary();
+}
+function calcROI3() {
+  const a = parseFloat(document.getElementById('roi-agents').value) || 0;
+  const t = parseFloat(document.getElementById('roi-turnover').value) || 0;
+  const r = parseFloat(document.getElementById('roi-replace').value) || 0;
+  const red = parseFloat(document.getElementById('roi-turnover-red').value) || 0;
+  const save = a * (t/100) * (red/100) * r;
+  document.getElementById('roi-retention-save').textContent = fmt(save);
+  updateSummary();
+}
+function calcROI4() {
+  const risk = parseFloat(document.getElementById('roi-risk').value) || 0;
+  const red = parseFloat(document.getElementById('roi-risk-red').value) || 0;
+  document.getElementById('roi-risk-save').textContent = fmt(risk * (red/100));
+  updateSummary();
+}
+
+function toggleDelight(header) { header.parentElement.classList.toggle('open'); }
+
+function updateSummary() {
+  const pain = document.querySelectorAll('.friction-card.selected').length;
+  const uc = document.querySelectorAll('.use-case-card[class*="selected-"]').length;
+  const wf = document.querySelectorAll('#workflow-steps .workflow-row').length;
+  document.getElementById('sum-pain').textContent = pain || '—';
+  document.getElementById('sum-uc').textContent = uc || '—';
+  document.getElementById('sum-wf').textContent = wf || '—';
+  const parse = id => {
+    const el = document.getElementById(id); if (!el) return 0;
+    const t = el.textContent.replace(/[^0-9.KMB]/g,'');
+    if (t.includes('M')) return parseFloat(t)*1000000;
+    if (t.includes('K')) return parseFloat(t)*1000;
+    return parseFloat(t)||0;
+  };
+  const total = parse('roi-annual-save') + parse('roi-ss-annual') + parse('roi-retention-save') + parse('roi-risk-save');
+  document.getElementById('sum-roi').textContent = total > 0 ? fmt(total) : '—';
+}
+
+function updateProgress() {
+  let filled = 0, total = 0;
+  document.querySelectorAll('input[type="text"], input[type="number"], textarea').forEach(el => {
+    total++; if (el.value.trim()) filled++;
+  });
+  document.querySelectorAll('.pill.active, .friction-card.selected, .use-case-card[class*="selected-"], .rating-btn[class*="active-"]').forEach(() => { filled += 0.5; total += 0.5; });
+  const pct = total > 0 ? Math.min(100, Math.round((filled / total) * 100)) : 0;
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('pct').textContent = pct + '%';
+}
+
+const sections = document.querySelectorAll('.section');
+const navItems = document.querySelectorAll('.nav-item');
+window.addEventListener('scroll', () => {
+  let current = '';
+  sections.forEach(s => { if (window.scrollY >= s.offsetTop - 120) current = s.id; });
+  navItems.forEach(n => n.classList.toggle('active', n.getAttribute('href') === '#' + current));
+});
+
+function clearAll() {
+  if (!confirm('Reset this session? All data will be lost.')) return;
+  document.querySelectorAll('input[type="text"], input[type="number"], textarea').forEach(el => el.value = '');
+  document.querySelectorAll('.pill.active, .friction-card.selected').forEach(el => el.classList.remove('active','selected'));
+  document.querySelectorAll('.use-case-card').forEach(c => c.classList.remove('selected-voice','selected-digital','selected-ai','selected-fsi'));
+  document.querySelectorAll('.rating-btn').forEach(b => b.className='rating-btn');
+  document.querySelectorAll('.imp-dot').forEach(d => d.classList.remove('lit'));
+  document.querySelectorAll('.delight-item.open').forEach(d => d.classList.remove('open'));
+  document.getElementById('workflow-steps').innerHTML = '';
+  workflowCounter = 0;
+  addWorkflowStep(); addWorkflowStep(); addWorkflowStep();
+  updateSummary(); updateProgress();
+  toast('Session reset');
+}
+
+function collectData() {
+  const data = { meta: { savedAt: new Date().toISOString() }, client: {}, pills: {}, friction: [], useCases: [], workflow: [], kpis: [], roi: {}, outputs: {} };
+  document.querySelectorAll('input[type="text"][id], input[type="number"][id], textarea[id]').forEach(el => { if (el.id) data.client[el.id] = el.value; });
+  document.querySelectorAll('[id^="pills-"]').forEach(p => { data.pills[p.id] = Array.from(p.querySelectorAll('.pill.active')).map(x => x.textContent.trim()); });
+  document.querySelectorAll('.friction-card.selected .friction-card-name').forEach(n => data.friction.push(n.textContent));
+  document.querySelectorAll('.use-case-card[class*="selected-"]').forEach(c => {
+    data.useCases.push({ name: c.querySelector('.uc-name').textContent, type: c.querySelector('.uc-tag').textContent });
+  });
+  document.querySelectorAll('#workflow-steps .workflow-row').forEach(r => {
+    const inputs = r.querySelectorAll('input'); const sel = r.querySelector('select');
+    data.workflow.push({ step: inputs[0].value, actor: inputs[1].value, notes: inputs[2].value, type: sel.value });
+  });
+  document.querySelectorAll('.kpi-row').forEach(r => {
+    const inputs = r.querySelectorAll('input');
+    const lit = r.querySelectorAll('.imp-dot.lit').length;
+    data.kpis.push({ metric: inputs[0].value, current: inputs[1].value, target: inputs[2].value, timeline: inputs[3].value, owner: inputs[4].value, priority: lit, fdapm: r.classList.contains('fdapm-native') });
+  });
+  ['roi-volume','roi-aht','roi-aht-red','roi-agent-cost','roi-ss-current','roi-ss-target','roi-cpc','roi-ss-cost','roi-agents','roi-turnover','roi-replace','roi-turnover-red','roi-risk','roi-risk-red'].forEach(id => {
+    const el = document.getElementById(id); if (el && el.value) data.roi[id] = el.value;
+  });
+  data.outputs = {
+    annualHandleTimeSavings: document.getElementById('roi-annual-save').textContent,
+    annualContainmentSavings: document.getElementById('roi-ss-annual').textContent,
+    annualRetentionSavings: document.getElementById('roi-retention-save').textContent,
+    annualRiskAvoidance: document.getElementById('roi-risk-save').textContent,
+    totalEstROI: document.getElementById('sum-roi').textContent
+  };
+  return data;
+}
+
+function saveLocal() {
+  try {
+    window._blueprintSave = JSON.stringify(collectData());
+    try { localStorage.setItem('talkdesk_blueprint', window._blueprintSave); } catch(e) {}
+    toast('Session saved');
+  } catch(e) { toast('Save failed'); }
+}
+function loadLocal() {
+  try {
+    let raw = null;
+    try { raw = localStorage.getItem('talkdesk_blueprint'); } catch(e) {}
+    if (!raw) raw = window._blueprintSave;
+    if (!raw) { toast('No saved session'); return; }
+    const data = JSON.parse(raw);
+    Object.entries(data.client || {}).forEach(([k,v]) => { const el = document.getElementById(k); if (el) el.value = v; });
+    Object.entries(data.pills || {}).forEach(([gid, vals]) => {
+      const g = document.getElementById(gid); if (!g) return;
+      g.querySelectorAll('.pill').forEach(p => { if (vals.includes(p.textContent.trim())) p.classList.add('active'); });
+    });
+    updateProgress(); updateSummary();
+    toast('Session restored');
+  } catch(e) { toast('Load failed'); }
+}
+
+function exportJSON() {
+  const data = collectData();
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  const company = (document.getElementById('f-company').value || 'client').replace(/[^a-z0-9]/gi,'_');
+  a.download = `talkdesk_blueprint_${company}_${new Date().toISOString().slice(0,10)}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+  toast('JSON exported');
+}
+
+let toastTimer;
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// ══ SALESFORCE ══
+let sfObjectType = 'opportunity';
+function openSFModal() { document.getElementById('sfOverlay').classList.add('open'); sfStep(1); }
+function closeSFModal() { document.getElementById('sfOverlay').classList.remove('open'); }
+function sfStep(n) {
+  ['sf-step-1','sf-step-2','sf-step-3','sf-step-success'].forEach(id => document.getElementById(id).style.display = 'none');
+  document.getElementById('sf-step-' + n).style.display = 'block';
+  if (n === 3) renderSFReview();
+}
+function selectSFObject(card, type) {
+  document.querySelectorAll('.sf-object-card').forEach(c => c.classList.remove('selected'));
+  card.classList.add('selected');
+  sfObjectType = type;
+}
+
+function buildSFPayloads() {
+  const d = collectData();
+  const company = d.client['f-company'] || 'Unnamed Client';
+  const contact = d.client['f-contact'] || '';
+  const context = d.client['f-context'] || '';
+  const roiAmount = (() => {
+    const t = d.outputs.totalEstROI.replace(/[^0-9.KMB]/g,'');
+    if (t.includes('M')) return parseFloat(t)*1000000;
+    if (t.includes('K')) return parseFloat(t)*1000;
+    return parseFloat(t) || 0;
+  })();
+  const industry = (d.pills['pills-industry'] || ['Unknown'])[0];
+  const desc = `Talkdesk Forward Deployed Client Blueprint\n\n=== CONTEXT ===\n${context || 'n/a'}\n\n=== PAIN AREAS ===\n${d.friction.join(', ') || 'None identified'}\n\n=== USE CASES ===\n${d.useCases.map(u=>u.name).join(', ') || 'None'}\n\n=== ROI ===\nHandle Time: ${d.outputs.annualHandleTimeSavings}\nContainment: ${d.outputs.annualContainmentSavings}\nRetention: ${d.outputs.annualRetentionSavings}\nRisk Avoidance: ${d.outputs.annualRiskAvoidance}\nTotal Annual: ${d.outputs.totalEstROI}\n\n=== WORKFLOW ===\n${d.workflow.map((w,i) => `${i+1}. [${(w.type||'?').toUpperCase()}] ${w.step} — ${w.actor}`).join('\n')}`;
+  const close = new Date(Date.now() + 90*24*60*60*1000).toISOString().slice(0,10);
+  return {
+    opportunity: { Name: `${company} — Talkdesk CXA Engagement`, StageName: 'Qualification', CloseDate: close, Amount: Math.round(roiAmount), Description: desc, LeadSource: 'Forward Deployed Blueprint' },
+    account: { Name: company, Industry: industry, Description: context || '—' },
+    contact: { LastName: contact.split(' ').slice(-1)[0] || 'Unknown', FirstName: contact.split(' ').slice(0,-1).join(' ') || '', AccountId: '(linked to new Account)' },
+    task: { Subject: `Discovery Blueprint — ${company}`, Status: 'Completed', Priority: 'High', Description: desc, ActivityDate: new Date().toISOString().slice(0,10) }
+  };
+}
+
+function renderSFReview() {
+  const p = buildSFPayloads();
+  const target = document.getElementById('sf-review');
+  let html = '';
+  const render = (title, obj) => {
+    let s = `<div class="sf-review-section"><div class="sf-review-section-title">${title}</div>`;
+    Object.entries(obj).forEach(([k,v]) => {
+      const val = String(v).length > 150 ? String(v).slice(0,150) + '…' : v;
+      s += `<div class="sf-kv"><div class="sf-kv-key">${k}</div><div class="sf-kv-val">${val}</div></div>`;
+    });
+    s += `</div>`; return s;
+  };
+  if (sfObjectType === 'opportunity' || sfObjectType === 'all') html += render('Opportunity', p.opportunity);
+  if (sfObjectType === 'account' || sfObjectType === 'all') { html += render('Account', p.account); html += render('Contact', p.contact); }
+  if (sfObjectType === 'task' || sfObjectType === 'all') html += render('Task / Activity', p.task);
+  target.innerHTML = html;
+}
+
+async function sfPush() {
+  const instance = document.getElementById('sf-instance').value.trim().replace(/\/$/,'');
+  const token = document.getElementById('sf-token').value.trim();
+  const owner = document.getElementById('sf-owner').value.trim();
+  const status = document.getElementById('sf-status');
+  const btn = document.getElementById('sf-push-btn');
+  if (!instance || !token) {
+    status.className = 'sf-status error'; status.innerHTML = '✕ Missing instance URL or access token.'; status.style.display = 'flex'; return;
+  }
+  status.className = 'sf-status loading';
+  status.innerHTML = '<div class="sf-spinner"></div> Pushing records to Salesforce...';
+  status.style.display = 'flex'; btn.disabled = true;
+  const payloads = buildSFPayloads();
+  const results = {};
+  try {
+    const base = `${instance}/services/data/v59.0/sobjects`;
+    const hdrs = { 'Content-Type':'application/json', 'Authorization':`Bearer ${token}` };
+    async function createRecord(obj, body) {
+      if (owner) body.OwnerId = owner;
+      const res = await fetch(`${base}/${obj}/`, { method:'POST', headers:hdrs, body: JSON.stringify(body) });
+      if (!res.ok) { const err = await res.text(); throw new Error(`${obj} failed: ${res.status} — ${err.slice(0,200)}`); }
+      return res.json();
+    }
+    if (sfObjectType === 'account' || sfObjectType === 'all') {
+      const acc = await createRecord('Account', payloads.account); results.accountId = acc.id;
+      const con = await createRecord('Contact', { ...payloads.contact, AccountId: acc.id }); results.contactId = con.id;
+    }
+    if (sfObjectType === 'opportunity' || sfObjectType === 'all') {
+      const oppBody = { ...payloads.opportunity };
+      if (results.accountId) oppBody.AccountId = results.accountId;
+      const opp = await createRecord('Opportunity', oppBody); results.opportunityId = opp.id;
+    }
+    if (sfObjectType === 'task' || sfObjectType === 'all') {
+      const taskBody = { ...payloads.task };
+      if (results.opportunityId) taskBody.WhatId = results.opportunityId;
+      else if (results.accountId) taskBody.WhatId = results.accountId;
+      const task = await createRecord('Task', taskBody); results.taskId = task.id;
+    }
+    const links = document.getElementById('sf-result-links'); links.innerHTML = '';
+    [['accountId','Account'],['contactId','Contact'],['opportunityId','Opportunity'],['taskId','Activity']].forEach(([k,label]) => {
+      if (results[k]) {
+        const a = document.createElement('a');
+        a.className = 'sf-result-link'; a.href = `${instance}/${results[k]}`; a.target = '_blank';
+        a.innerHTML = `↗ View ${label}`;
+        links.appendChild(a);
+      }
+    });
+    sfStep('success');
+  } catch (err) {
+    status.className = 'sf-status error';
+    status.innerHTML = '✕ ' + err.message + '<br><span style="font-size:10px;opacity:0.8;display:block;margin-top:4px;">Salesforce may require CORS config. For production, route through backend.</span>';
+    btn.disabled = false;
+  }
+}
+
+document.querySelectorAll('input, textarea').forEach(el => {
+  el.addEventListener('input', () => { updateProgress(); updateSummary(); });
+});
+
+updateProgress();
+updateSummary();
+</script>
+</body>
+</html>
